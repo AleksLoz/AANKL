@@ -393,6 +393,60 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
 .cal-campaign-bar.bar-mid{border-radius:0;margin-left:-1px;margin-right:-1px}
 .cal-campaign-bar.bar-end{border-radius:0 3px 3px 0;margin-left:-1px}
 .cal-drag-over{background:var(--accent-light)!important}
+
+/* INSPO VIEW */
+.inspo-header{padding:18px 0 10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.inspo-title{font-size:22px;font-weight:800;letter-spacing:-0.5px}
+.inspo-boards-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;border-bottom:2px solid var(--border);padding-bottom:0}
+.inspo-board-tab{padding:8px 18px;border:none;background:none;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;border-radius:0;white-space:nowrap}
+.inspo-board-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.inspo-board-tab:hover{color:var(--text)}
+.inspo-add-tab-btn{padding:6px 12px;border:1.5px dashed var(--border2);border-radius:var(--radius);font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;background:none;transition:all .15s;white-space:nowrap;margin-bottom:2px}
+.inspo-add-tab-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.inspo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;padding:4px 0 40px}
+.inspo-card{border-radius:10px;overflow:hidden;background:var(--card);border:1px solid var(--border);cursor:pointer;position:relative;transition:box-shadow .15s,transform .15s;aspect-ratio:9/14}
+.inspo-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12);transform:translateY(-2px)}
+.inspo-card:hover .inspo-del{opacity:1}
+.inspo-card-media{width:100%;height:75%;object-fit:cover;display:block;background:var(--bg)}
+.inspo-card-body{padding:7px 9px;height:25%;display:flex;flex-direction:column;justify-content:center}
+.inspo-card-caption{font-size:11px;font-weight:600;color:var(--text);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3}
+.inspo-card-platform{font-size:10px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:3px}
+.inspo-del{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:13px;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
+.inspo-add-card{border-radius:10px;border:2px dashed var(--border2);background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;aspect-ratio:9/14;transition:all .15s;color:var(--text3)}
+.inspo-add-card:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.inspo-add-card-icon{font-size:28px}
+.inspo-add-card-label{font-size:11px;font-weight:600}
+.inspo-placeholder{width:100%;height:75%;display:flex;align-items:center;justify-content:center;font-size:32px}
+.inspo-tab-edit{display:inline-flex;align-items:center;gap:4px}
+.inspo-tab-rename{position:absolute;top:0;left:0;right:0;bottom:0;opacity:0;cursor:pointer;width:100%;background:none;border:none;font:inherit}
+.inspo-board-tab-wrap{position:relative;display:inline-flex;align-items:center}
+.inspo-board-tab-wrap:hover .inspo-tab-del{opacity:1}
+.inspo-tab-del{opacity:0;font-size:10px;color:var(--text3);cursor:pointer;padding:0 2px;transition:opacity .15s;margin-left:2px}
+
+/* MOODBOARD */
+.moodboard-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:4px 0}
+.moodboard-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1;background:var(--bg);border:1.5px dashed var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.moodboard-card:hover .moodboard-del{opacity:1}
+.moodboard-card img{width:100%;height:100%;object-fit:cover}
+.moodboard-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center;line-height:1}
+.moodboard-add{font-size:26px;color:var(--text3);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.moodboard-add span{font-size:11px;font-weight:600;color:var(--text3)}
+.moodboard-caption{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.45);color:#fff;font-size:9px;padding:3px 5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.moodboard-drop-zone{border:2px dashed var(--accent);background:var(--accent-light)!important;border-radius:var(--radius)}
+/* INF profile pic column */
+.inf-avatar-sm{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.inf-handle-link{color:var(--accent);font-size:11px;text-decoration:none;cursor:pointer}
+.inf-handle-link:hover{text-decoration:underline}
+/* TEAM SETTINGS */
+.team-user-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px}
+.team-user-row:last-child{border-bottom:none}
+.team-user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.team-user-info{flex:1;min-width:0}
+.team-user-name{font-weight:600}
+.team-user-email{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.team-admin-badge{font-size:10px;background:#ede9ff;color:var(--accent);padding:1px 7px;border-radius:10px;font-weight:700;margin-left:4px}
+.invite-link-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:11px;color:var(--text2);word-break:break-all;margin-top:6px;font-family:monospace}
+
 #cal-body{display:flex;gap:0;align-items:flex-start;min-height:0}
 #cal-grid-wrap{flex:1;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
 #cal-ideas-sidebar{width:220px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;margin-left:12px;align-self:stretch}
@@ -698,6 +752,7 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
     <button class="view-pill" data-view="tasks">Tasks</button>
     <button class="view-pill" data-view="campaigns">Campaigns</button>
     <button class="view-pill" data-view="influencers">Influencers</button>
+    <button class="view-pill" data-view="inspo">✨ Inspo</button>
     <!-- Insights tab hidden -->
   </div>
   <div class="topbar-right">
@@ -883,6 +938,28 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
 
   <!-- INFLUENCERS VIEW -->
   <div class="view" id="view-influencers" style="display:none"></div>
+  <div class="view" id="view-inspo" style="display:none">
+    <!-- Static shell — JS replaces this on switch -->
+    <div class="inspo-header"><span class="inspo-title">&#10024; Inspo Boards</span></div>
+    <div class="inspo-boards-bar" id="inspo-boards-bar-static">
+      <div class="inspo-board-tab-wrap"><button class="inspo-board-tab active" data-board-init="sneaker_girlie">Sneaker Girlie</button></div>
+      <div class="inspo-board-tab-wrap"><button class="inspo-board-tab" data-board-init="always_on_crowd">Always on Crowd</button></div>
+      <div class="inspo-board-tab-wrap"><button class="inspo-board-tab" data-board-init="cool_mom">Cool Mom</button></div>
+      <div class="inspo-board-tab-wrap"><button class="inspo-board-tab" data-board-init="comfort_conv">Comfort Converter</button></div>
+      <button class="inspo-add-tab-btn">+ Add Board</button>
+    </div>
+    <div class="inspo-grid" id="inspo-grid-static">
+      <div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;text-align:center">
+        <div style="font-size:52px;margin-bottom:14px">&#128444;</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Nothing here yet</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:22px">Paste a TikTok or Instagram link, or upload images and videos</div>
+      </div>
+      <div class="inspo-add-card" onclick="openInspoAddModal(activeInspoBoard||'sneaker_girlie')">
+        <div class="inspo-add-card-icon">+</div>
+        <div class="inspo-add-card-label">Add Inspo</div>
+      </div>
+    </div>
+  </div>
 
   <!-- INSIGHTS VIEW -->
   <div class="view" id="view-insights" style="display:none"></div>
@@ -1184,6 +1261,32 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
       <button class="btn" id="inf-import-cancel">Cancel</button>
       <button class="btn btn-primary" id="inf-import-confirm">Import</button>
     </div>
+  </div>
+</div>
+
+
+<!-- INVITE USER MODAL -->
+<div id="invite-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:800;align-items:center;justify-content:center">
+  <div style="background:var(--card);border-radius:var(--radius-lg);width:420px;max-width:95vw;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.15)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-weight:700;font-size:15px">Invite Team Member</span>
+      <button onclick="document.getElementById('invite-modal-overlay').style.display='none'" style="border:none;background:none;font-size:18px;cursor:pointer;color:var(--text3)">×</button>
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);display:block;margin-bottom:4px">NAME</label>
+      <input id="inv-name" type="text" placeholder="e.g. Sophie" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--bg);box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);display:block;margin-bottom:4px">EMAIL</label>
+      <input id="inv-email" type="email" placeholder="e.g. sophie@brand.com" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--bg);box-sizing:border-box">
+    </div>
+    <button id="inv-generate-btn" class="btn btn-primary" style="width:100%;justify-content:center">Generate Invite Link</button>
+    <div id="inv-result" style="margin-top:12px;display:none">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px">INVITE LINK — share this with the team member:</div>
+      <div class="invite-link-box" id="inv-link-text"></div>
+      <button id="inv-copy-btn" class="btn" style="margin-top:8px;width:100%;justify-content:center">📋 Copy Link</button>
+    </div>
+    <p style="margin-top:12px;font-size:11px;color:var(--text3);line-height:1.5">The invited person opens this link and creates their account. No email is sent automatically.</p>
   </div>
 </div>
 
@@ -2345,6 +2448,7 @@ function closeDetailModal() {
   else if (viewId==='tasks') renderKanban();
   else if (viewId==='campaigns') renderCampaigns();
   else if (viewId==='influencers') renderInfluencers();
+  else if (viewId==='inspo') renderInspo();
   else renderListView();
 }
 document.getElementById('modal-close').addEventListener('click', closeDetailModal);
@@ -2684,6 +2788,18 @@ function renderSettingsTabs() {
   });
   // Admin badge
   if(isAdmin){
+    // Team tab
+    const _teamBtn = document.createElement('button');
+    _teamBtn.className = 'settings-tab' + (activeSettingsTab==='_team'?' active':'');
+    _teamBtn.textContent = '👥 Team';
+    _teamBtn.dataset.stab = '_team';
+    _teamBtn.addEventListener('click', () => {
+      activeSettingsTab = '_team';
+      renderSettingsTabs();
+      renderTeamSettings();
+    });
+    tabs.appendChild(_teamBtn);
+    if (activeSettingsTab === '_team') { setTimeout(renderTeamSettings, 0); }
     const badge=document.createElement('span');
     badge.style.cssText='font-size:10px;font-weight:700;color:var(--accent);padding:4px 8px;opacity:.7';
     badge.textContent='Admin';
@@ -2826,6 +2942,7 @@ function switchView(viewId) {
   else if (viewId==='campaigns') renderCampaigns();
   else if (viewId==='influencers') renderInfluencers();
   else if (viewId==='insights') renderInsights();
+  else if (viewId==='inspo') renderInspo();
   else if (viewId==='list') renderListView();
 }
 document.querySelectorAll('.view-pill').forEach(pill=>{
@@ -2900,6 +3017,8 @@ function isBabyDay(month, day) {
 
 function getCalContent() {
   let items = CONTENT;
+  // Never show done subtasks on the calendar
+  items = items.filter(c => !(c.parentId && c.status === 'done'));
   if (calFilter.type === 'campaigns') {
     items = items.filter(c => c.contentType === 'campaign' || c.parentId);
   } else if (calFilter.type !== 'all') {
@@ -2945,6 +3064,23 @@ function buildCalFilterRow() {
   if (sel) sel.addEventListener('change', () => { calFilter.platform = sel.value; renderCalendar(); });
   const psel = document.getElementById('cal-prod-select');
   if (psel) psel.addEventListener('change', () => { calFilter.product = psel.value; renderCalendar(); });
+}
+
+function assignCampaignTracks(items) {
+  // Assign each campaign a vertical lane so parallel campaigns don't overlap
+  const camps = items.filter(c => c.contentType === 'campaign' && c.startDate && c.publishDate)
+    .sort((a,b) => (a.startDate||'').localeCompare(b.startDate||''));
+  const trackEnds = []; // last end date of each track
+  const campTrack = {};
+  camps.forEach(camp => {
+    const s = camp.startDate;
+    const e = camp.publishDate;
+    let t = trackEnds.findIndex(end => end < s);
+    if (t === -1) t = trackEnds.length;
+    trackEnds[t] = e;
+    campTrack[camp.id] = t;
+  });
+  return { campTrack, numTracks: trackEnds.length };
 }
 
 function renderThreeMonthGrid(wrap) {
@@ -3238,8 +3374,10 @@ function renderMonthGrid(wrap) {
   }
 
   // Build items map: date -> [{item, isCampaign, spanType}]
+  const calContent = getCalContent();
+  const { campTrack, numTracks } = assignCampaignTracks(calContent);
   const dayItems = {};
-  getCalContent().forEach(item=>{
+  calContent.forEach(item=>{
     if (!item.publishDate) return;
     if (item.startDate && item.contentType==='campaign') {
       // span
@@ -3253,7 +3391,7 @@ function renderMonthGrid(wrap) {
         const isEnd = toYMD(cur)===toYMD(end);
         const _prodM = (CONFIG.products||[]).find(p=>p.id===item.product);
         const _bcM = item.color || (_prodM?_prodM.color:null) || '#6366f1';
-        dayItems[k].push({item, isCampaignBar:true, isStart, isEnd, barColor:_bcM});
+        dayItems[k].push({item, isCampaignBar:true, isStart, isEnd, barColor:_bcM, track: campTrack[item.id]||0});
         cur.setDate(cur.getDate()+1);
       }
     } else {
@@ -3296,8 +3434,11 @@ function renderMonthGrid(wrap) {
     if (salaryD) html += `<span class="cal-salary" title="Salary day">💰</span>`;
     if (babyD) html += `<span class="cal-baby" title="Baby check-in">👶</span>`;
 
-    cellItems.forEach(({item, isCampaignBar, isStart, isEnd, barColor})=>{
-      if (isCampaignBar) {
+    // Render campaign tracks first (stable rows), then subtasks
+    for (let _t = 0; _t < numTracks; _t++) {
+      const _bar = cellItems.find(ci => ci.isCampaignBar && ci.track === _t);
+      if (_bar) {
+        const {item, isStart, isEnd, barColor} = _bar;
         let barClass = 'cal-campaign-bar';
         if (isStart) barClass += ' bar-start';
         else if (isEnd) barClass += ' bar-end';
@@ -3306,18 +3447,22 @@ function renderMonthGrid(wrap) {
         const lbl = isStart ? item.title : '';
         html += `<span class="${barClass}" data-id="${item.id}" title="${item.title}" style="${bStyle}">${lbl}</span>`;
       } else {
-        const isEvent = item.contentType === 'event';
-        const eventPrefix = isEvent ? '🔥 ' : '';
-        const extraClass = isEvent ? ' event-cal-item' : '';
-        if (item.parentId) {
-          const _pcamp = CONTENT.find(c=>c.id===item.parentId);
-          const _cc = _pcamp ? (_pcamp.color||'#6366f1') : '#9c9893';
-          html += `<span class="cal-chip${extraClass}" data-id="${item.id}" style="background:transparent;color:var(--text)" title="${item.title}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${_cc};margin-right:3px;vertical-align:middle;flex-shrink:0"></span>${eventPrefix}${item.title}</span>`;
-        } else {
-          const pl = getCfg('platforms', item.platform);
-          const color = pl ? pl.color : '#9c9893';
-          html += `<span class="cal-chip${extraClass}" data-id="${item.id}" style="background:${color}" title="${item.title}">${eventPrefix}${item.title}</span>`;
-        }
+        html += `<span style="display:block;height:14px;margin-bottom:2px"></span>`;
+      }
+    }
+    // Subtask chips (done already filtered out by getCalContent)
+    cellItems.filter(ci => !ci.isCampaignBar).forEach(({item})=>{
+      const isEvent = item.contentType === 'event';
+      const eventPrefix = isEvent ? '🔥 ' : '';
+      const extraClass = isEvent ? ' event-cal-item' : '';
+      if (item.parentId) {
+        const _pcamp = CONTENT.find(c=>c.id===item.parentId);
+        const _cc = _pcamp ? (_pcamp.color||'#6366f1') : '#9c9893';
+        html += `<span class="cal-chip${extraClass}" data-id="${item.id}" style="background:transparent;color:var(--text)" title="${item.title}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${_cc};margin-right:3px;vertical-align:middle;flex-shrink:0"></span>${eventPrefix}${item.title}</span>`;
+      } else {
+        const pl = getCfg('platforms', item.platform);
+        const color = pl ? pl.color : '#9c9893';
+        html += `<span class="cal-chip${extraClass}" data-id="${item.id}" style="background:${color}" title="${item.title}">${eventPrefix}${item.title}</span>`;
       }
     });
     html += '</div>';
@@ -3768,13 +3913,26 @@ function openCampaignPlan(campId) {
     </div>
     <hr class="plan-divider">
     <div class="plan-section">
-      <div class="plan-section-label">Content Ideas</div>
-      <div class="plan-editor" id="plan-ideas" contenteditable="true" data-placeholder="Stories, reels, newsletters, UGC briefs, founder videos, trend hooks...">${camp.planIdeas||''}</div>
+      <div class="plan-section-label" style="display:flex;align-items:center;gap:8px">
+        Moodboard & Inspiration
+        <span style="font-size:10px;font-weight:400;color:var(--text3)">Drop images or paste URLs</span>
+      </div>
+      <div id="moodboard-grid" class="moodboard-wrap">
+        <div class="moodboard-card" id="moodboard-add-btn" title="Add image">
+          <button class="moodboard-add" onclick="openMoodboardAdd('${camp.id}')">
+            <span>＋</span><span>Add image</span>
+          </button>
+        </div>
+      </div>
+      <input type="file" id="moodboard-file-inp" accept="image/*" multiple style="display:none">
+      <div style="margin-top:8px;font-size:11px;color:var(--text3)">
+        Tip: You can also drag & drop images directly onto the grid above.
+      </div>
     </div>
     <hr class="plan-divider">
     <div class="plan-section">
       <div class="plan-section-label">Notes & Links</div>
-      <div class="plan-editor" id="plan-notes" contenteditable="true" data-placeholder="Reference links, mood board URLs, asset locations, team notes...">${camp.planNotes||''}</div>
+      <div class="plan-editor" id="plan-notes" contenteditable="true" data-placeholder="Reference links, asset locations, team notes...">${camp.planNotes||''}</div>
     </div>
     ${subtasks.length > 0 ? `
     <hr class="plan-divider">
@@ -3795,6 +3953,28 @@ function openCampaignPlan(campId) {
     row.addEventListener('click', ()=>openDetailModal(row.dataset.id));
   });
 
+  // Render moodboard
+  renderMoodboard(campId);
+  // Wire moodboard drag-drop
+  const mbGrid = inner.querySelector('#moodboard-grid');
+  if (mbGrid) {
+    mbGrid.addEventListener('dragover', e => { e.preventDefault(); mbGrid.classList.add('moodboard-drop-zone'); });
+    mbGrid.addEventListener('dragleave', () => mbGrid.classList.remove('moodboard-drop-zone'));
+    mbGrid.addEventListener('drop', e => {
+      e.preventDefault(); mbGrid.classList.remove('moodboard-drop-zone');
+      const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+      files.forEach(file => addMoodboardImageFromFile(campId, file));
+    });
+  }
+  // Wire file input
+  const mbFileInp = inner.querySelector('#moodboard-file-inp');
+  if (mbFileInp) {
+    mbFileInp.addEventListener('change', e => {
+      Array.from(e.target.files).forEach(file => addMoodboardImageFromFile(campId, file));
+      e.target.value = '';
+    });
+  }
+
   // Auto-save with debounce
   function scheduleSave() {
     clearTimeout(planSaveTimer);
@@ -3802,14 +3982,76 @@ function openCampaignPlan(campId) {
       const c = getItem(campId);
       if (!c) return;
       c.planBrief = inner.querySelector('#plan-brief').innerHTML;
-      c.planIdeas = inner.querySelector('#plan-ideas').innerHTML;
       c.planNotes = inner.querySelector('#plan-notes').innerHTML;
       saveData();
     }, 600);
   }
-  ['plan-brief','plan-ideas','plan-notes'].forEach(id=>{
+  ['plan-brief','plan-notes'].forEach(id=>{
     const el = inner.querySelector('#'+id);
     if (el) el.addEventListener('input', scheduleSave);
+  });
+}
+
+
+// ====================================================================
+//  MOODBOARD  (per campaign)
+// ====================================================================
+window.openMoodboardAdd = function(campId) {
+  // Try file picker first
+  const inp = document.getElementById('moodboard-file-inp');
+  if (inp) { inp.click(); return; }
+  const url = prompt('Paste image URL:');
+  if (!url) return;
+  addMoodboardImageFromUrl(campId, url, '');
+};
+
+function addMoodboardImageFromFile(campId, file) {
+  const reader = new FileReader();
+  reader.onload = e => addMoodboardImageFromUrl(campId, e.target.result, file.name.replace(/\.[^.]+$/, ''));
+  reader.readAsDataURL(file);
+}
+
+function addMoodboardImageFromUrl(campId, url, caption) {
+  const camp = getItem(campId);
+  if (!camp) return;
+  if (!camp.moodboard) camp.moodboard = [];
+  camp.moodboard.push({ id: uid(), url, caption: caption||'' });
+  saveData();
+  renderMoodboard(campId);
+}
+
+function renderMoodboard(campId) {
+  const grid = document.getElementById('moodboard-grid');
+  if (!grid) return;
+  const camp = getItem(campId);
+  const images = (camp && camp.moodboard) || [];
+  // Build cards
+  let html = '';
+  images.forEach(img => {
+    html += `<div class="moodboard-card" data-mb-id="${img.id}">
+      <img src="${img.url}" alt="${img.caption||''}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <button class="moodboard-del" data-del-mb="${img.id}" data-camp="${campId}" title="Remove">×</button>
+      ${img.caption ? `<div class="moodboard-caption">${img.caption}</div>` : ''}
+    </div>`;
+  });
+  // Add button card at end
+  html += `<div class="moodboard-card" id="moodboard-add-btn" title="Add image" style="cursor:pointer" onclick="openMoodboardAdd('${campId}')">
+    <button class="moodboard-add"><span>＋</span><span>Add image</span></button>
+  </div>`;
+  grid.innerHTML = html;
+  grid.querySelectorAll('[data-del-mb]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const c = getItem(btn.dataset.camp);
+      if (c) { c.moodboard = (c.moodboard||[]).filter(im=>im.id!==btn.dataset.delMb); saveData(); renderMoodboard(btn.dataset.camp); }
+    });
+  });
+  grid.querySelectorAll('[data-mb-id]').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('[data-del-mb]')) return;
+      const img = (camp&&camp.moodboard||[]).find(im=>im.id===card.dataset.mbId);
+      if (img) window.open(img.url,'_blank');
+    });
   });
 }
 
@@ -3949,6 +4191,7 @@ document.getElementById('btn-add-campaign').addEventListener('click',()=>{
 // ====================================================================
 const INF_STATUSES = [
   {id:'inquired', label:'Inquired', color:'#8b5cf6', bg:'#ede9ff', icon:'💬'},
+  {id:'negotiating', label:'Negotiating', color:'#f97316', bg:'#fff7ed', icon:'🤝'},
   {id:'in_comm', label:'In Comm.', color:'#3b82f6', bg:'#eff6ff', icon:'📩'},
   {id:'sent_products', label:'Sent Products', color:'#f59e0b', bg:'#fffbeb', icon:'📦'},
   {id:'received_content', label:'Received Content', color:'#10b981', bg:'#f0fdf4', icon:'🎬'},
@@ -4045,8 +4288,9 @@ function renderInfluencers() {
             <th>CREATOR</th>
             <th>PLATFORM</th>
             <th>FOLLOWERS</th>
+            <th>PRICE</th>
             <th>STATUS</th>
-            <th>PIPELINE</th>
+            <th>AGREED</th>
             <th>POST</th>
             <th></th>
           </tr>
@@ -4065,34 +4309,34 @@ function renderInfluencers() {
     const pipelineDots = INF_STATUSES.map((s,i)=>`<span class="inf-pipe-dot${i<=statusIdx?' filled':''}"></span>`).join('');
     const tr = document.createElement('tr');
     tr.dataset.infId = inf.id;
+    const _profUrl = inf.profileUrl || `https://www.${inf.platform}.com/${inf.handle.replace('@','')}`;
+    const _picSrc  = inf.profilePicUrl || inf.avatarUrl || '';
     tr.innerHTML = `
       <td>
         <div class="inf-name-cell">
-          ${inf.avatarUrl
-            ? `<img src="${inf.avatarUrl}" class="inf-avatar" style="object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-            : ''}
-          <div class="inf-avatar" style="background:${avatarColor};${inf.avatarUrl?'display:none':''}">${infInitials(inf.name)}</div>
+          ${_picSrc
+            ? `<img src="${_picSrc}" class="inf-avatar-sm" onerror="this.style.display='none'">`
+            : `<div class="inf-avatar-sm" style="background:${avatarColor};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">${infInitials(inf.name)}</div>`}
           <div>
-            <div class="inf-name-text">${inf.profileUrl ? `<a href="${inf.profileUrl}" target="_blank" style="color:inherit;text-decoration:none">${inf.name} <span style="font-size:10px;opacity:.5">↗</span></a>` : inf.name}</div>
-            <div class="inf-handle-text">${inf.handle}</div>
+            <div class="inf-name-text">${inf.name}</div>
+            <a class="inf-handle-link" href="${_profUrl}" target="_blank">${inf.handle} ↗</a>
           </div>
         </div>
       </td>
       <td><span class="inf-platform-pill" style="background:${plColor}">${inf.platform}</span></td>
       <td>
         <span style="font-weight:600">${fmtFollowers(inf.followers)}</span>
-        <span style="color:var(--text3);font-size:11px"> followers</span>
       </td>
+      <td style="font-size:12px;color:var(--text2)">${inf.deliverablePrice ? `<span style="font-weight:600">${inf.deliverablePrice}</span>` : '<span style="color:var(--text3)">—</span>'}</td>
       <td>
         <select class="inf-status-sel" data-inf-id="${inf.id}" style="padding:3px 6px;border:1px solid ${statusCfg.color}30;background:${statusCfg.bg};color:${statusCfg.color};border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;appearance:none;text-align:center">
           ${INF_STATUSES.map(s=>`<option value="${s.id}"${inf.status===s.id?' selected':''}>${s.label}</option>`).join('')}
         </select>
       </td>
-      <td><div class="inf-pipeline-dots">${pipelineDots}</div></td>
-      <td style="font-size:12px;color:var(--text3)">${inf.postUrl ? `<a href="${inf.postUrl}" target="_blank" style="color:var(--accent)">View post ↗</a>` : '—'}</td>
+      <td style="font-size:11px;color:var(--text2)">${inf.agreedDate ? `<span style="color:var(--accent);font-weight:600">✓ ${inf.agreedDate}</span>` : '<span style="color:var(--text3)">—</span>'}</td>
+      <td style="font-size:12px;color:var(--text3)">${inf.postUrl ? `<a href="${inf.postUrl}" target="_blank" style="color:var(--accent)">View ↗</a>` : '—'}</td>
       <td style="white-space:nowrap">
         <button class="inf-action-btn inf-edit-btn" data-inf-id="${inf.id}" title="Edit">📝</button>
-        ${inf.profileUrl ? `<button class="inf-action-btn" onclick="window.open('${inf.profileUrl}','_blank')" title="Open profile">↗</button>` : `<button class="inf-action-btn" onclick="window.open('https://www.${inf.platform}.com/${inf.handle.replace('@','')}','_blank')" title="Open profile">↗</button>`}
       </td>`;
     tr.querySelector('.inf-status-sel').addEventListener('change', e=>{
       e.stopPropagation();
@@ -4194,6 +4438,22 @@ function openInfDrawer(id) {
     <div class="inf-checkbox-row"><input type="checkbox" id="idf-posted" ${inf.posted?'checked':''}><label for="idf-posted">Posted</label></div>
     <div class="inf-drawer-sep"></div>
     <div class="inf-drawer-field">
+      <span class="inf-drawer-label">Profile Pic URL</span>
+      <input class="inf-drawer-input" id="idf-profilepic" type="url" placeholder="Paste profile pic URL..." value="${inf.profilePicUrl||''}">
+    </div>
+    <div class="inf-drawer-field">
+      <span class="inf-drawer-label">Product Info</span>
+      <input class="inf-drawer-input" id="idf-productinfo" placeholder="e.g. CloudMove, SunGo Kids" value="${inf.productInfo||''}">
+    </div>
+    <div class="inf-drawer-field">
+      <span class="inf-drawer-label">Price / Deliverable Rate</span>
+      <input class="inf-drawer-input" id="idf-price" placeholder="e.g. €300 / 1 Reel + 2 Stories" value="${inf.deliverablePrice||''}">
+    </div>
+    <div class="inf-drawer-field">
+      <span class="inf-drawer-label">Agreed On (date)</span>
+      <input class="inf-drawer-input" id="idf-agreed" type="date" value="${inf.agreedDate||''}">
+    </div>
+    <div class="inf-drawer-field">
       <span class="inf-drawer-label">Notes</span>
       <textarea class="inf-drawer-textarea" id="idf-notes">${inf.notes||''}</textarea>
     </div>
@@ -4217,6 +4477,10 @@ function openInfDrawer(id) {
     inf.contentReceived = document.getElementById('idf-contentreceived').checked;
     inf.posted = document.getElementById('idf-posted').checked;
     inf.notes = document.getElementById('idf-notes').value;
+    inf.profilePicUrl = (document.getElementById('idf-profilepic')||{}).value||inf.profilePicUrl||'';
+    inf.productInfo = (document.getElementById('idf-productinfo')||{}).value||'';
+    inf.deliverablePrice = (document.getElementById('idf-price')||{}).value||'';
+    inf.agreedDate = (document.getElementById('idf-agreed')||{}).value||'';
     saveData(); closeInfDrawer(); renderInfluencers(); toast('Creator updated');
   });
   document.getElementById('idf-delete').addEventListener('click', ()=>{
@@ -4850,6 +5114,13 @@ document.getElementById('su-btn')?.addEventListener('click', async ()=>{
   if(users.length === 0) newUser.isAdmin = true;
   users.push(newUser);
   saveAuthUsers(users);
+  // Consume pending invite token
+  const _pendingInv = sessionStorage.getItem('aankl_pending_invite');
+  if (_pendingInv) {
+    saveInvites(getInvites().filter(i=>i.token!==_pendingInv));
+    sessionStorage.removeItem('aankl_pending_invite');
+    location.hash = '';
+  }
   finishLogin(assigneeId);
   const welcome = newUser.isAdmin ? 'Welcome, Admin! You have full settings access.' : 'Welcome to AANKL Studio, '+name+'!';
   toast(welcome);
@@ -5123,8 +5394,437 @@ function renderEmailjsSettings(){
   });
 }
 
+
+// ====================================================================
+//  TEAM SETTINGS + INVITE SYSTEM
+// ====================================================================
+function renderTeamSettings() {
+  const content = document.getElementById('settings-content');
+  if (!content) return;
+  const authUsers = getAuthUsers();
+  const invites = getInvites();
+  content.innerHTML = `
+    <div style="padding:16px;height:100%;overflow-y:auto;box-sizing:border-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <span style="font-weight:700;font-size:14px">Team Members (${authUsers.length})</span>
+        <button class="btn btn-primary" id="team-invite-btn" style="font-size:12px;padding:5px 12px">+ Invite Member</button>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:20px">
+        ${authUsers.map(u => {
+          const assignee = getCfg('assignees', u.id)||{};
+          const initials = (u.name||'?').split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2);
+          const color = assignee.color||'#6366f1';
+          return `<div class="team-user-row">
+            <div class="team-user-avatar" style="background:${color}22;color:${color}">${initials}</div>
+            <div class="team-user-info">
+              <div class="team-user-name">${u.name||u.email}${u.isAdmin?'<span class="team-admin-badge">Admin</span>':''}</div>
+              <div class="team-user-email">${u.email||''}</div>
+            </div>
+            ${currentUserIsAdmin() && u.id !== currentUserId ? `
+              <select data-role-sel="${u.id}" style="font-size:11px;padding:3px 7px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;flex-shrink:0">
+                <option value="viewer" ${(u.role||'editor')==='viewer'?'selected':''}>Viewer</option>
+                <option value="editor" ${(u.role||'editor')==='editor'?'selected':''}>Editor</option>
+                <option value="admin" ${u.isAdmin?'selected':''}>Admin</option>
+              </select>
+            ` : `<span style="font-size:11px;color:var(--text3);flex-shrink:0">${u.isAdmin?'Admin':(u.role||'Editor')}</span>`}
+          </div>`;
+        }).join('')}
+      </div>
+      ${invites.length > 0 ? `
+      <div style="font-weight:700;font-size:13px;margin-bottom:8px">Pending Invites</div>
+      <div style="background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:20px">
+        ${invites.map(inv => `
+          <div class="team-user-row" style="gap:8px">
+            <div class="team-user-avatar" style="background:#fff3cd;color:#d97706">?</div>
+            <div class="team-user-info">
+              <div class="team-user-name">${inv.name||'—'}</div>
+              <div class="team-user-email">${inv.email||''}</div>
+            </div>
+            <button data-del-invite="${inv.token}" style="border:none;background:none;color:var(--text3);cursor:pointer;font-size:13px" title="Cancel invite">✕</button>
+          </div>`).join('')}
+      </div>` : ''}
+    </div>
+  `;
+  // Wire admin toggles
+  content.querySelectorAll('[data-toggle-admin]').forEach(chk => {
+    chk.addEventListener('change', () => {
+      const users = getAuthUsers();
+      const ui = users.findIndex(u => u.id === chk.dataset.toggleAdmin);
+      if (ui >= 0) { users[ui].isAdmin = chk.checked; saveAuthUsers(users); toast(chk.checked?'Made admin':'Removed admin'); }
+    });
+  });
+  // Wire role selectors
+  content.querySelectorAll('[data-role-sel]').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const users = getAuthUsers();
+      const ui = users.findIndex(u => u.id === sel.dataset.roleSel);
+      if (ui < 0) return;
+      users[ui].role = sel.value;
+      users[ui].isAdmin = sel.value === 'admin';
+      saveAuthUsers(users);
+      toast('Role updated to '+sel.value);
+    });
+  });
+  // Wire cancel invite
+  content.querySelectorAll('[data-del-invite]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const invs = getInvites().filter(i => i.token !== btn.dataset.delInvite);
+      saveInvites(invs); renderTeamSettings(); toast('Invite cancelled');
+    });
+  });
+  // Invite button
+  content.querySelector('#team-invite-btn')?.addEventListener('click', () => {
+    document.getElementById('invite-modal-overlay').style.display = 'flex';
+    document.getElementById('inv-result').style.display = 'none';
+    document.getElementById('inv-name').value = '';
+    document.getElementById('inv-email').value = '';
+  });
+}
+
+// ─── Invite token helpers ──────────────────────────────────
+const INVITES_KEY = 'aankl_invites_v1';
+function getInvites() { try { return JSON.parse(localStorage.getItem(INVITES_KEY)||'[]'); } catch(e) { return []; } }
+function saveInvites(arr) { localStorage.setItem(INVITES_KEY, JSON.stringify(arr)); }
+
+document.getElementById('inv-generate-btn')?.addEventListener('click', () => {
+  const name  = document.getElementById('inv-name').value.trim();
+  const email = document.getElementById('inv-email').value.trim().toLowerCase();
+  if (!name) { alert('Please enter a name'); return; }
+  const token = uid() + uid();
+  const invites = getInvites();
+  // Remove old invite for same email
+  const fresh = invites.filter(i => i.email !== email);
+  fresh.push({ token, name, email, createdBy: currentUserId, createdAt: Date.now() });
+  saveInvites(fresh);
+  const link = `${location.href.split('#')[0]}#invite=${token}`;
+  document.getElementById('inv-link-text').textContent = link;
+  document.getElementById('inv-result').style.display = 'block';
+  toast('Invite link generated!');
+});
+
+document.getElementById('inv-copy-btn')?.addEventListener('click', () => {
+  const txt = document.getElementById('inv-link-text').textContent;
+  navigator.clipboard.writeText(txt).then(() => toast('Link copied!')).catch(() => {
+    const el = document.getElementById('inv-link-text');
+    const sel = window.getSelection(); const range = document.createRange();
+    range.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(range);
+    toast('Select and copy the link above');
+  });
+});
+
+// ─── Read invite token on load, pre-fill signup email ──────
+(function checkInviteToken() {
+  const hash = location.hash;
+  const m = hash.match(/invite=([a-z0-9]+)/i);
+  if (!m) return;
+  const token = m[1];
+  const invites = getInvites();
+  const inv = invites.find(i => i.token === token);
+  if (!inv) return;
+  // Pre-fill signup tab
+  const nameEl = document.getElementById('su-name');
+  const emailEl = document.getElementById('su-email');
+  if (nameEl && inv.name) nameEl.value = inv.name;
+  if (emailEl && inv.email) emailEl.value = inv.email;
+  if (typeof switchAuthTab === 'function') switchAuthTab('signup');
+  // Store token so sign-up can consume it
+  sessionStorage.setItem('aankl_pending_invite', token);
+  toast('You have been invited! Create your account below.', 'info');
+})();
+
+
+// ====================================================================
+//  INSPO VIEW  — persona moodboards with link/video cards
+// ====================================================================
+const INSPO_KEY = 'aankl_inspo_v2';
+const INSPO_DEFAULT_BOARDS = [
+  {id:'sneaker_girlie',  label:'Sneaker Girlie'},
+  {id:'always_on_crowd', label:'Always on Crowd'},
+  {id:'cool_mom',        label:'Cool Mom'},
+  {id:'comfort_conv',    label:'Comfort Converter'},
+];
+const INSPO_PLATFORM = {
+  tiktok:    {label:'TikTok',    bg:'#010101',  color:'#fff', icon:'TT'},
+  instagram: {label:'Instagram', bg:'linear-gradient(135deg,#833AB4,#E1306C,#FD1D1D)', color:'#fff', icon:'IG'},
+  youtube:   {label:'YouTube',   bg:'#ff0000',  color:'#fff', icon:'YT'},
+  pinterest: {label:'Pinterest', bg:'#e60023',  color:'#fff', icon:'P'},
+  link:      {label:'Link',      bg:'#6366f1',  color:'#fff', icon:'↗'},
+};
+
+function getInspoData() {
+  try { var raw=localStorage.getItem(INSPO_KEY); if(raw){var p=JSON.parse(raw);if(p&&p.boards)return p;} } catch(e) {}
+  return { boards: INSPO_DEFAULT_BOARDS.map(function(b){return {id:b.id,label:b.label};}), cards: [] };
+}
+function saveInspoData(d) { try { localStorage.setItem(INSPO_KEY, JSON.stringify(d)); } catch(e){} }
+
+let activeInspoBoard = null;
+
+function detectInspoPlatform(url) {
+  if (!url) return 'link';
+  if (/tiktok\.com/i.test(url)) return 'tiktok';
+  if (/instagram\.com/i.test(url)) return 'instagram';
+  if (/youtube\.com|youtu\.be/i.test(url)) return 'youtube';
+  if (/pinterest\.com/i.test(url)) return 'pinterest';
+  return 'link';
+}
+
+async function fetchTikTokThumb(url) {
+  try { var r=await fetch('https://www.tiktok.com/oembed?url='+encodeURIComponent(url)); if(!r.ok)return null; var j=await r.json(); return j.thumbnail_url||null; } catch(e){return null;}
+}
+
+function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+let _inspoBoardTarget = null;
+
+function openInspoAddModal(boardId) {
+  // Always tear down and rebuild to avoid stale state / wrong board
+  var old = document.getElementById('inspo-add-ov');
+  if (old) old.remove();
+
+  _inspoBoardTarget = boardId;
+  var ov = document.createElement('div');
+  ov.id = 'inspo-add-ov';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:flex;align-items:center;justify-content:center';
+  ov.innerHTML = '<div style="background:var(--card);border-radius:12px;width:440px;max-width:96vw;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.2)">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
+    +'<b style="font-size:16px">Add Inspo</b>'
+    +'<button id="iam-x" style="border:none;background:none;font-size:22px;cursor:pointer;color:var(--text3)">&times;</button>'
+    +'</div>'
+    +'<div style="display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:18px">'
+    +'<button id="iam-tl" style="flex:1;padding:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff">&#128279; Paste Link</button>'
+    +'<button id="iam-tu" style="flex:1;padding:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg);color:var(--text2)">&#128247; Upload</button>'
+    +'</div>'
+    +'<div id="iam-pl">'
+    +'<input id="iam-url" type="url" placeholder="Instagram, TikTok, YouTube link…" style="width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);margin-bottom:10px">'
+    +'<input id="iam-cap" type="text" placeholder="Caption (optional)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);margin-bottom:14px">'
+    +'<button id="iam-go" style="width:100%;padding:11px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer">Add to Board</button>'
+    +'<div id="iam-ls" style="margin-top:8px;font-size:12px;color:var(--text3);text-align:center;min-height:16px"></div>'
+    +'</div>'
+    +'<div id="iam-pu" style="display:none">'
+    +'<div id="iam-dz" style="border:2px dashed var(--border2);border-radius:10px;padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:12px;transition:all .15s">'
+    +'<div style="font-size:40px;margin-bottom:8px">&#128247;</div>'
+    +'<div style="font-size:13px;font-weight:600;color:var(--text2)">Drop image or video here</div>'
+    +'<div style="font-size:11px;color:var(--text3);margin-top:4px">or click to browse</div>'
+    +'</div>'
+    +'<input id="iam-fi" type="file" accept="image/*,video/*" multiple style="display:none">'
+    +'<input id="iam-uc" type="text" placeholder="Caption (optional)" style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg)">'
+    +'<div id="iam-us" style="margin-top:8px;font-size:12px;color:var(--text3);text-align:center;min-height:16px"></div>'
+    +'</div>'
+    +'</div>';
+  document.body.appendChild(ov);
+
+  function setIamTab(isLink) {
+    ov.querySelector('#iam-tl').style.background = isLink?'var(--accent)':'var(--bg)';
+    ov.querySelector('#iam-tl').style.color = isLink?'#fff':'var(--text2)';
+    ov.querySelector('#iam-tu').style.background = isLink?'var(--bg)':'var(--accent)';
+    ov.querySelector('#iam-tu').style.color = isLink?'var(--text2)':'#fff';
+    ov.querySelector('#iam-pl').style.display = isLink?'':'none';
+    ov.querySelector('#iam-pu').style.display = isLink?'none':'';
+  }
+  ov.querySelector('#iam-tl').addEventListener('click', function(){setIamTab(true);});
+  ov.querySelector('#iam-tu').addEventListener('click', function(){setIamTab(false);});
+  ov.querySelector('#iam-x').addEventListener('click', function(){ov.remove();});
+  ov.addEventListener('click', function(e){if(e.target===ov)ov.remove();});
+
+  ov.querySelector('#iam-go').addEventListener('click', async function() {
+    var urlVal = (ov.querySelector('#iam-url').value||'').trim();
+    if(!urlVal){ov.querySelector('#iam-url').focus();return;}
+    var cap = (ov.querySelector('#iam-cap').value||'').trim();
+    var ls = ov.querySelector('#iam-ls');
+    ls.textContent = 'Adding…';
+    var plat = detectInspoPlatform(urlVal);
+    var thumb = null;
+    if(plat==='tiktok'){ls.textContent='Fetching preview…';thumb=await fetchTikTokThumb(urlVal);}
+    var dd = getInspoData(); if(!dd.cards)dd.cards=[];
+    dd.cards.push({id:uid(),boardId:_inspoBoardTarget,type:'link',url:urlVal,caption:cap,platform:plat,thumbUrl:thumb,addedAt:Date.now()});
+    saveInspoData(dd);
+    ov.remove();
+    renderInspo();
+  });
+  ov.querySelector('#iam-url').addEventListener('keydown',function(e){if(e.key==='Enter')ov.querySelector('#iam-go').click();});
+
+  var dz=ov.querySelector('#iam-dz'), fi=ov.querySelector('#iam-fi');
+  dz.addEventListener('click',function(){fi.click();});
+  dz.addEventListener('dragover',function(e){e.preventDefault();dz.style.borderColor='var(--accent)';dz.style.background='var(--accent-light)';});
+  dz.addEventListener('dragleave',function(){dz.style.borderColor='var(--border2)';dz.style.background='';});
+  dz.addEventListener('drop',function(e){e.preventDefault();dz.style.borderColor='var(--border2)';dz.style.background='';
+    Array.from(e.dataTransfer.files).forEach(function(f){processInspoFile(f,ov);});
+  });
+  fi.addEventListener('change',function(e){Array.from(e.target.files).forEach(function(f){processInspoFile(f,ov);});e.target.value='';});
+
+  setTimeout(function(){var u=ov.querySelector('#iam-url');if(u)u.focus();},60);
+}
+
+function processInspoFile(file, ov) {
+  var isVid=file.type.startsWith('video/'), isImg=file.type.startsWith('image/');
+  if(!isVid&&!isImg)return;
+  var us=ov.querySelector('#iam-us'), cap=(ov.querySelector('#iam-uc')||{}).value||'';
+  if(file.size>50*1024*1024){if(us)us.textContent='Too large (max 50MB)';return;}
+  if(us)us.textContent='Processing…';
+  var r=new FileReader();
+  r.onload=function(ev){
+    var dd=getInspoData(); if(!dd.cards)dd.cards=[];
+    dd.cards.push({id:uid(),boardId:_inspoBoardTarget,type:isVid?'video':'image',dataUrl:ev.target.result,caption:cap||file.name.replace(/\.[^.]+$/,''),addedAt:Date.now()});
+    saveInspoData(dd); ov.remove(); renderInspo();
+  };
+  r.readAsDataURL(file);
+}
+
+function renderInspo() {
+  try {
+    var view=document.getElementById('view-inspo'); if(!view)return;
+    var d=getInspoData();
+    if(!d.boards||!d.boards.length) d.boards=INSPO_DEFAULT_BOARDS.map(function(b){return{id:b.id,label:b.label};});
+    if(!d.cards) d.cards=[];
+    if(!activeInspoBoard||!d.boards.some(function(b){return b.id===activeInspoBoard;}))
+      activeInspoBoard=d.boards.length?d.boards[0].id:null;
+
+    var activeBoard=d.boards.find(function(b){return b.id===activeInspoBoard;});
+    var boardNotes=activeBoard?(activeBoard.notes||''):'';
+
+    // Tab bar
+    var tabs='';
+    for(var i=0;i<d.boards.length;i++){
+      var b=d.boards[i], cnt=0;
+      for(var j=0;j<d.cards.length;j++){if(d.cards[j].boardId===b.id)cnt++;}
+      tabs+='<div class="inspo-board-tab-wrap">'
+        +'<button class="inspo-board-tab'+(b.id===activeInspoBoard?' active':'')+'" data-board="'+b.id+'">'
+        +escH(b.label)+' <span style="font-size:10px;opacity:.5;margin-left:3px">'+cnt+'</span></button>'
+        +'<span class="inspo-tab-del" data-del-board="'+b.id+'" title="Delete">&times;</span>'
+        +'</div>';
+    }
+    tabs+='<button class="inspo-add-tab-btn" id="inspo-add-board-btn">+ Add Board</button>';
+
+    // Cards
+    var bc=d.cards.filter(function(c){return c.boardId===activeInspoBoard;})
+      .sort(function(a,b){return(b.addedAt||0)-(a.addedAt||0);});
+    var grid='';
+    for(var k=0;k<bc.length;k++){
+      var card=bc[k];
+      var plat=INSPO_PLATFORM[card.platform||'link']||INSPO_PLATFORM.link;
+      var media='';
+      if(card.type==='video'&&card.dataUrl)
+        media='<video class="inspo-card-media" src="'+card.dataUrl+'" muted playsinline preload="metadata" style="pointer-events:none"></video>';
+      else if(card.type==='image'&&card.dataUrl)
+        media='<img class="inspo-card-media" src="'+card.dataUrl+'" loading="lazy" alt="">';
+      else if(card.thumbUrl)
+        media='<img class="inspo-card-media" src="'+escH(card.thumbUrl)+'" loading="lazy" alt="" onerror="this.style.display=\'none\'">';
+      if(!media)
+        media='<div class="inspo-placeholder" style="background:'+plat.bg+';color:'+plat.color+';font-size:32px;font-weight:900;letter-spacing:2px">'+escH(plat.icon)+'</div>';
+      grid+='<div class="inspo-card" data-card-id="'+card.id+'" data-card-url="'+escH(card.url||'')+'">'
+        +media
+        +'<button class="inspo-del" data-del-card="'+card.id+'">&times;</button>'
+        +'<div class="inspo-card-body">'
+        +'<div class="inspo-card-caption">'+escH(card.caption||card.url||'')+'</div>'
+        +'<div class="inspo-card-platform">'+escH(plat.label)+'</div>'
+        +'</div></div>';
+    }
+    if(!bc.length){
+      grid='<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;text-align:center">'
+        +'<div style="font-size:48px;margin-bottom:12px">&#128444;</div>'
+        +'<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Nothing here yet</div>'
+        +'<div style="font-size:12px;color:var(--text3);margin-bottom:20px">Paste a TikTok or Instagram link, or upload images and videos</div>'
+        +'</div>';
+    }
+    grid+='<div class="inspo-add-card" id="inspo-add-card-btn"><div class="inspo-add-card-icon">+</div><div class="inspo-add-card-label">Add Inspo</div></div>';
+
+    // Hooks / notes section
+    var notesHtml='<div style="margin-top:28px;padding-top:20px;border-top:1.5px solid var(--border)">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
+      +'<span style="font-size:16px">✏️</span>'
+      +'<span style="font-size:13px;font-weight:700;color:var(--text)">Hooks &amp; Notes</span>'
+      +'<span style="font-size:11px;color:var(--text3);margin-left:auto">auto-saved</span>'
+      +'</div>'
+      +'<textarea id="inspo-notes-ta" placeholder="Add hooks, angles, caption ideas, trends to watch… anything relevant to this board." '
+      +'style="width:100%;box-sizing:border-box;min-height:110px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;'
+      +'font-size:13px;line-height:1.6;background:var(--bg);color:var(--text);resize:vertical;font-family:inherit;outline:none;transition:border-color .15s">'
+      +escH(boardNotes)
+      +'</textarea>'
+      +'</div>';
+
+    view.innerHTML='<div class="inspo-header"><span class="inspo-title">&#10024; Inspo Boards</span></div>'
+      +'<div class="inspo-boards-bar">'+tabs+'</div>'
+      +'<div class="inspo-grid">'+grid+'</div>'
+      +notesHtml;
+
+    // Wire notes textarea — save on input (debounced)
+    var notesTA=view.querySelector('#inspo-notes-ta');
+    if(notesTA){
+      var _notesTmr=null;
+      notesTA.addEventListener('focus',function(){notesTA.style.borderColor='var(--accent)';});
+      notesTA.addEventListener('blur',function(){notesTA.style.borderColor='var(--border)';});
+      notesTA.addEventListener('input',function(){
+        clearTimeout(_notesTmr);
+        _notesTmr=setTimeout(function(){
+          var dd=getInspoData();
+          var bx=dd.boards.find(function(b){return b.id===activeInspoBoard;});
+          if(bx){bx.notes=notesTA.value;saveInspoData(dd);}
+        },400);
+      });
+    }
+
+    // Wire board tabs
+    view.querySelectorAll('[data-board]').forEach(function(btn){
+      btn.addEventListener('click',function(){activeInspoBoard=btn.dataset.board;renderInspo();});
+      btn.addEventListener('dblclick',function(){
+        var dd=getInspoData(),bx=dd.boards.find(function(b){return b.id===btn.dataset.board;});
+        var lbl=prompt('Rename board:',bx?bx.label:''); if(!lbl)return;
+        if(bx){bx.label=lbl;saveInspoData(dd);renderInspo();}
+      });
+    });
+    view.querySelectorAll('[data-del-board]').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        if(!confirm('Delete this board and all its cards?'))return;
+        var dd=getInspoData();
+        dd.boards=dd.boards.filter(function(b){return b.id!==btn.dataset.delBoard;});
+        dd.cards=dd.cards.filter(function(c){return c.boardId!==btn.dataset.delBoard;});
+        if(activeInspoBoard===btn.dataset.delBoard) activeInspoBoard=dd.boards.length?dd.boards[0].id:null;
+        saveInspoData(dd);renderInspo();
+      });
+    });
+    var ab=view.querySelector('#inspo-add-board-btn');
+    if(ab)ab.addEventListener('click',function(){
+      var lbl=prompt('New board name:');if(!lbl)return;
+      var dd=getInspoData(),nid='b_'+uid(); dd.boards.push({id:nid,label:lbl}); activeInspoBoard=nid; saveInspoData(dd); renderInspo();
+    });
+    var ac=view.querySelector('#inspo-add-card-btn');
+    if(ac)ac.addEventListener('click',function(){if(activeInspoBoard)openInspoAddModal(activeInspoBoard);});
+    view.querySelectorAll('.inspo-card').forEach(function(card){
+      card.addEventListener('click',function(e){
+        if(e.target.closest('[data-del-card]'))return;
+        var url=card.dataset.cardUrl;
+        if(url){window.open(url,'_blank');return;}
+        var dd=getInspoData(),c=dd.cards.find(function(x){return x.id===card.dataset.cardId;});
+        if(c&&c.dataUrl){var w=window.open('','_blank');if(w)w.document.write(c.type==='video'?'<video src="'+c.dataUrl+'" controls autoplay style="max-width:100%;max-height:100vh;margin:auto;display:block"></video>':'<img src="'+c.dataUrl+'" style="max-width:100%;max-height:100vh;margin:auto;display:block">');}
+      });
+    });
+    view.querySelectorAll('[data-del-card]').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var dd=getInspoData(); dd.cards=dd.cards.filter(function(c){return c.id!==btn.dataset.delCard;}); saveInspoData(dd); renderInspo();
+      });
+    });
+    view.querySelectorAll('video.inspo-card-media').forEach(function(v){
+      var card=v.closest('.inspo-card');
+      if(card){card.addEventListener('mouseenter',function(){v.play().catch(function(){});});card.addEventListener('mouseleave',function(){v.pause();v.currentTime=0;});}
+    });
+  } catch(err) {
+    console.error('renderInspo error:',err);
+    var vv=document.getElementById('view-inspo');
+    if(vv) vv.innerHTML='<div style="padding:40px;color:#ef4444;font-size:14px">Inspo error: '+String(err.message)+'</div>';
+  }
+}
+
+
 // ─── Boot ─────────────────────────────────────────────────
 (function initAuth(){
+  // Ensure alekslozinska@aankl.com is always admin
+  (function ensureOwnerAdmin(){
+    const users = getAuthUsers();
+    const owner = users.find(u => u.email === 'alekslozinska@aankl.com');
+    if (owner && !owner.isAdmin) { owner.isAdmin = true; saveAuthUsers(users); }
+  })();
   const savedId = localStorage.getItem(CURRENT_USER_KEY);
   const logoWrap = document.getElementById('login-logo-wrap');
   const logoImg  = document.querySelector('.topbar-brand img');
