@@ -1300,6 +1300,67 @@ const DATA_KEY   = 'aankl_studio_content_v3';
 const VIEWS_KEY  = 'aankl_studio_saved_views';
 const INF_KEY    = 'aankl_influencers_v1';
 
+// ── Supabase Sync ────────────────────────────────────────────────────────────
+const SB_URL = 'https://gayfrcoinmstztfxajmu.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdheWZyY29pbm1zdHp0Znhham11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNDYzMjMsImV4cCI6MjA5NzcyMjMyM30.gAwbeTRxuZV-YxhLwYkQqVHpspZ4hG8nKfZURsIYPwU';
+const SB_HDRS = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+async function sbGet(key) {
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/aankl_store?key=eq.' + encodeURIComponent(key) + '&select=value', { headers: SB_HDRS });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return d.length ? d[0].value : null;
+  } catch(e) { return null; }
+}
+
+async function sbSet(key, value) {
+  try {
+    await fetch(SB_URL + '/rest/v1/aankl_store', {
+      method: 'POST',
+      headers: Object.assign({}, SB_HDRS, { Prefer: 'resolution=merge-duplicates' }),
+      body: JSON.stringify({ key: key, value: value, updated_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+}
+
+function sbStripDataUrls(inspoData) {
+  if (!inspoData || !inspoData.cards) return inspoData;
+  return Object.assign({}, inspoData, {
+    cards: inspoData.cards.map(function(c){ return c.dataUrl ? Object.assign({}, c, {dataUrl: null}) : c; })
+  });
+}
+
+async function sbSync() {
+  const map = [
+    ['content',     'aankl_studio_content_v3'],
+    ['config',      'aankl_studio_config_v3'],
+    ['auth_users',  'aankl_auth_users'],
+    ['influencers', 'aankl_influencers_v1'],
+    ['inspo',       'aankl_inspo_v2'],
+    ['invites',     'aankl_invites_v1'],
+    ['saved_views', 'aankl_studio_saved_views'],
+  ];
+  await Promise.all(map.map(async function(pair) {
+    var sbKey = pair[0], lsKey = pair[1];
+    var val = await sbGet(sbKey);
+    if (val === null) return;
+    if (sbKey === 'inspo') {
+      try {
+        var local = JSON.parse(localStorage.getItem(lsKey) || 'null');
+        if (local && local.cards) {
+          var localUrls = {};
+          local.cards.forEach(function(c){ if(c.dataUrl) localUrls[c.id] = c.dataUrl; });
+          val.cards = (val.cards || []).map(function(c){ return Object.assign({}, c, {dataUrl: localUrls[c.id] || null}); });
+        }
+      } catch(e2) {}
+    }
+    localStorage.setItem(lsKey, JSON.stringify(val));
+  }));
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+
 const DEFAULT_CONFIG = {"statuses":[{"id":"idea","label":"Idea","color":"#d8d0ec"},{"id":"in_process","label":"In Process","color":"#e6dead"},{"id":"ready","label":"Ready","color":"#ace2d0"},{"id":"done","label":"Done","color":"#6b7280"},{"id":"to_do","label":"To Do","color":"#e4b9b9"},{"id":"mq0nk3vc","label":"Late","color":"#e4b9b9"}],"platforms":[{"id":"instagram","label":"Instagram","color":"#e193ad"},{"id":"tiktok","label":"TikTok","color":"#aeb4c1"},{"id":"youtube_shorts","label":"YouTube Shorts","color":"#e9aaaa"},{"id":"facebook","label":"Facebook","color":"#b1c6e2"},{"id":"newsletter","label":"Newsletter","color":"#a8d5ba"},{"id":"ad","label":"Ad","color":"#f9c8a0"}],"contentTypes":[{"id":"newsletter","label":"Newsletter"},{"id":"ad_creative","label":"Ad"},{"id":"ad","label":"Ad (paid)"},{"id":"ugc","label":"UGC"},{"id":"founder_video","label":"Founder Video"},{"id":"campaign","label":"Campaign","color":"#ecdeed"},{"id":"er7hruuu","label":"Organic post","color":"#888888"},{"id":"organic_post","label":"Organic post"},{"id":"nf2ulx4z","label":"Story","color":"#888888"},{"id":"story","label":"Story"},{"id":"idea","label":"Idea"},{"id":"iwqkcksg","label":"To do","color":"#888888"},{"id":"video","label":"Video"},{"id":"carousel","label":"Carousel"}],"priorities":[{"id":"urgent","label":"Urgent","color":"#ef4444"},{"id":"high","label":"High","color":"#f97316"},{"id":"medium","label":"Medium","color":"#eab308"},{"id":"low","label":"Low","color":"#6b7280"}],"assignees":[{"id":"aleksandra","label":"Aleksandra","color":"#8b5cf6","avatar":"https://ca.slack-edge.com/T07PTF2H9M1-U0B3DHFTVRB-1c98f432eabb-192","slackWebhook":"https://hooks.slack.com/services/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","notifyAssign":true,"notifyStatus":true,"notifyDue":true},{"id":"mads","label":"Mads","color":"#3b82f6","avatar":"https://ca.slack-edge.com/T07PTF2H9M1-U07QGBTV8F2-8532c0dc4343-512"},{"id":"camilla","label":"Camilla","color":"#f59e0b","avatar":"https://ca.slack-edge.com/T07PTF2H9M1-U08GSEF8Z18-e42af0413459-512"},{"id":"whrwm8dc","label":"Marcus","color":"#888888"},{"id":"o2da9zub","label":"Tobias","color":"#888888"}],"funnelStages":[{"id":"awareness","label":"TOFU"},{"id":"consideration","label":"MOFU"},{"id":"conversion","label":"BOFU"}],"personas":[{"id":"young_pro","label":"Comfort converter"},{"id":"new_mom","label":"Cool mom"},{"id":"active","label":"Intentional mom"},{"id":"fashion","label":"Sneaker girlie/boy"},{"id":"34hoqiyq","label":"Always on crowd"}],"taskBoards":[{"id":"aleksandra","label":"Aleksandra","type":"person","color":"#8b5cf6"},{"id":"mads","label":"Mads","type":"person","color":"#3b82f6"},{"id":"camilla","label":"Camilla","type":"person","color":"#f59e0b"},{"id":"whrwm8dc","label":"Marcus","type":"person","color":"#888888"},{"id":"o2da9zub","label":"Tobias","type":"person","color":"#888888"}],"products":[{"id":"sungo","label":"SunGo","color":"#e5e4b8"},{"id":"cloudmove","label":"CloudMove","color":"#dbd5cd"},{"id":"freeflow","label":"FreeFlow","color":"#6366f1"},{"id":"freeflow_mini","label":"FreeFlow Mini","color":"#ec4899"},{"id":"snowrider","label":"SnowRider","color":"#06b6d4"},{"id":"terranova","label":"TerraNova","color":"#10b981"},{"id":"general","label":"General / Brand","color":"#9c9893"}]};
 
 const DEFAULT_DATA = [{"id":"camp_Kids_Universe_Teaser","title":"👟 Kids Universe Teaser","contentType":"campaign","contentTypes":["campaign"],"platform":"newsletter","platforms":["newsletter","instagram","tiktok"],"startDate":"2026-07-20","publishDate":"2026-07-31","status":"planned","priority":"high","assignee":"aleksandra","persona":"new_mom","personas":["new_mom","active","young_pro","fashion"],"order":20,"comments":[],"description":"Campaign: Kids Universe Teaser | 2026-07-20 → 2026-07-31","funnelStage":"awareness"},{"id":"camp_AANKL_Kids_Launch","title":"🚀 AANKL Kids Launch","contentType":"campaign","contentTypes":["campaign"],"platform":"newsletter","platforms":["newsletter","facebook","instagram","tiktok"],"startDate":"2026-08-03","publishDate":"2026-08-07","status":"planned","priority":"high","assignee":"aleksandra","persona":"new_mom","personas":["new_mom"],"order":30,"comments":[],"description":"Campaign: AANKL Kids Launch | 2026-08-03 → 2026-08-07","funnelStage":"awareness"},{"id":"camp_AANKL_Kids_Launch_DE","title":"🚀 AANKL Kids Launch DE","contentType":"campaign","contentTypes":["campaign"],"platform":"facebook","platforms":["facebook","instagram","tiktok"],"startDate":"2026-08-18","publishDate":"2026-08-18","status":"planned","priority":"high","assignee":"aleksandra","persona":"new_mom","personas":["new_mom"],"order":40,"comments":[],"description":"Campaign: AANKL Kids Launch DE | 2026-08-18 → 2026-08-18","funnelStage":"awareness"},{"id":"camp_Move_Colour_Teaser","title":"🎨 Move Colour Teaser","contentType":"campaign","contentTypes":["campaign"],"platform":"instagram","platforms":["instagram","tiktok"],"startDate":"2026-08-17","publishDate":"2026-08-17","status":"planned","priority":"high","assignee":"aleksandra","persona":"fashion","personas":["fashion"],"order":50,"comments":[],"description":"Campaign: Move Colour Teaser | 2026-08-17 → 2026-08-17","funnelStage":"awareness"},{"id":"camp_Move_Colour_Drop","title":"🎉 Move Colour Drop","contentType":"campaign","contentTypes":["campaign"],"platform":"newsletter","platforms":["newsletter","facebook","instagram","tiktok"],"startDate":"2026-08-24","publishDate":"2026-08-27","status":"planned","priority":"high","assignee":"aleksandra","persona":"new_mom","personas":["new_mom","fashion"],"order":60,"comments":[],"description":"Campaign: Move Colour Drop | 2026-08-24 → 2026-08-27","funnelStage":"conversion"},{"id":"camp_Back_to_School","title":"🎒 Back to School","contentType":"campaign","contentTypes":["campaign"],"platform":"facebook","platforms":["facebook","instagram","tiktok"],"startDate":"2026-08-10","publishDate":"2026-08-10","status":"planned","priority":"high","assignee":"aleksandra","persona":"new_mom","personas":["new_mom"],"order":210,"comments":[],"description":"Campaign: Back to School | 2026-08-10 → 2026-08-10","funnelStage":"awareness"},{"id":"mc025","title":"Something exciting is coming for AANKL Kids this August… 👀","contentType":"video","contentTypes":["video"],"platform":"instagram","platforms":["instagram"],"publishDate":"2026-07-20","status":"planned","priority":"high","assignee":"aleksandra","order":470,"comments":[],"parentId":"camp_Kids_Universe_Teaser","funnelStage":"awareness","persona":"new_mom","personas":["new_mom"],"hook":"We've been working on something big. For the little ones.","cta":"Save this post →","description":"Stay tuned. August is going to be a good month.","campaignName":"Kids Universe Teaser"},{"id":"mc031","title":"AANKL Kids is coming. August 1st. Save the date. 🧒👟","contentType":"newsletter","contentTypes":["newsletter"],"platform":"tiktok","platforms":["tiktok","instagram","newsletter"],"publishDate":"2026-07-31","status":"planned","priority":"urgent","assignee":"aleksandra","order":530,"comments":[],"parentId":"camp_Kids_Universe_Teaser","funnelStage":"awareness","persona":"young_pro","personas":["young_pro","new_mom","active","fashion"],"hook":"Something small, but huge. Coming August 1st.","cta":"Sign up for early access →"},{"id":"mc032","title":"🚀 AANKL Kids is here. Free Flow Mini and SunGo now live.","contentType":"newsletter","contentTypes":["newsletter"],"platform":"tiktok","platforms":["tiktok","instagram","facebook","newsletter"],"publishDate":"2026-08-03","status":"planned","priority":"urgent","assignee":"aleksandra","order":540,"comments":[],"parentId":"camp_AANKL_Kids_Launch","funnelStage":"awareness","persona":"new_mom","personas":["new_mom"],"hook":"Little feet deserve big comfort."},{"id":"mc033","title":"Unboxing AANKL Kids Free Flow Mini","contentType":"ugc","contentTypes":["ugc"],"platform":"tiktok","platforms":["tiktok"],"publishDate":"2026-08-04","status":"planned","priority":"urgent","assignee":"aleksandra","order":550,"comments":[],"parentId":"camp_AANKL_Kids_Launch","funnelStage":"awareness","persona":"new_mom","personas":["new_mom"]},{"id":"mc035","title":"Hvad en mor til en anden: Disse sko er det bedste jeg har købt til min datter","contentType":"founder_video","contentTypes":["founder_video"],"platform":"tiktok","platforms":["tiktok","instagram"],"publishDate":"2026-08-07","status":"planned","priority":"urgent","assignee":"aleksandra","order":570,"comments":[],"parentId":"camp_AANKL_Kids_Launch","funnelStage":"awareness","persona":"new_mom","personas":["new_mom"]},{"id":"mc039","title":"🎨 Three new Move colours are arriving soon. Which one are you?","contentType":"video","contentTypes":["video"],"platform":"tiktok","platforms":["tiktok","instagram"],"publishDate":"2026-08-17","status":"planned","priority":"urgent","assignee":"aleksandra","order":610,"comments":[],"parentId":"camp_Move_Colour_Teaser","funnelStage":"awareness","persona":"fashion","personas":["fashion"]},{"id":"mc040","title":"Zuruck zur Schule","contentType":"ugc","contentTypes":["ugc"],"platform":"tiktok","platforms":["tiktok","instagram","facebook"],"publishDate":"2026-08-18","status":"planned","priority":"high","assignee":"aleksandra","order":620,"comments":[],"parentId":"camp_AANKL_Kids_Launch_DE","funnelStage":"awareness","persona":"new_mom","personas":["new_mom"]},{"id":"mc042","title":"🎉 They're here. Three new Move colours. Shop now.","contentType":"newsletter","contentTypes":["newsletter"],"platform":"tiktok","platforms":["tiktok","instagram","facebook","newsletter"],"publishDate":"2026-08-24","status":"planned","priority":"urgent","assignee":"aleksandra","order":640,"comments":[],"parentId":"camp_Move_Colour_Drop","funnelStage":"conversion","persona":"new_mom","personas":["new_mom","fashion"]},{"id":"mc044","title":"Which new Move colour is right for you?","contentType":"carousel","contentTypes":["carousel"],"platform":"instagram","platforms":["instagram"],"publishDate":"2026-08-27","status":"planned","priority":"high","assignee":"aleksandra","order":660,"comments":[],"parentId":"camp_Move_Colour_Drop","funnelStage":"conversion","persona":"fashion","personas":["fashion"]},{"id":"camp_sandal_lc25","title":"🔥 Sandal Last-Chance 25%","contentType":"campaign","contentTypes":["campaign"],"product":"sungо","startDate":"2026-06-10","publishDate":"2026-06-26","status":"in_process","priority":"high","order":5,"comments":[],"funnelStage":"conversion","color":"#ecd3a7","platforms":[],"personas":[]},{"id":"sub_slc_1","title":"Film black and green sandals","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_sandal_lc25","startDate":"2026-06-10","publishDate":"2026-06-10","status":"done","priority":"high","order":6,"comments":[],"platforms":[],"personas":[]},{"id":"sub_slc_2","title":"Edit the video and post it on all platforms","contentType":"video","contentTypes":["video"],"parentId":"camp_sandal_lc25","startDate":"2026-06-10","publishDate":"2026-06-11","status":"done","priority":"high","order":7,"comments":[],"platforms":[],"personas":[]},{"id":"sub_slc_3","title":"Send out a newsletter 25% on selected sandals","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_sandal_lc25","publishDate":"2026-06-10","status":"done","priority":"high","order":8,"comments":[],"platforms":[],"personas":[]},{"id":"sub_slc_4","title":"25% off sandals ad on meta","contentType":"ad","contentTypes":["ad"],"parentId":"camp_sandal_lc25","publishDate":"2026-06-11","status":"done","priority":"high","order":9,"comments":[],"platforms":[],"personas":[]},{"id":"sub_slc_5","title":"25% off sandals ad on google ads","contentType":"ad","contentTypes":["ad"],"parentId":"camp_sandal_lc25","publishDate":"2026-06-11","status":"done","priority":"high","order":10,"comments":[],"platforms":[],"personas":[]},{"id":"sub_slc_6","title":"Countdown: 24h left to grab 25% off black and green sandals","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_sandal_lc25","publishDate":"2026-06-25","status":"in_process","priority":"high","order":12,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"sub_slc_7","title":"3 stories with links and reminders","contentType":"story","contentTypes":["story"],"parentId":"camp_sandal_lc25","startDate":"2026-06-10","publishDate":"2026-06-23","status":"done","priority":"high","order":11,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_slc_8","title":"Trust pilot review on sandals (stories + carousel)","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_sandal_lc25","publishDate":"2026-06-23","status":"idea","priority":"high","order":13,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_slc_9","title":"Stop google ads","contentType":"idea","contentTypes":["idea"],"parentId":"camp_sandal_lc25","startDate":"2026-06-10","publishDate":"2026-06-26","status":"to_do","priority":"high","order":14,"comments":[],"platforms":[],"personas":[],"assignee":"o2da9zub"},{"id":"sub_slc_10","title":"Stop meta ads","contentType":"idea","contentTypes":["idea"],"parentId":"camp_sandal_lc25","startDate":"2026-06-10","publishDate":"2026-06-26","status":"to_do","priority":"high","order":15,"comments":[],"platforms":[],"personas":[],"assignee":"whrwm8dc"},{"id":"camp_acc_move","title":"⚡ Accelerate MOVE","contentType":"campaign","contentTypes":["campaign"],"product":"cloudmove","startDate":"2026-06-09","publishDate":"2026-07-08","status":"in_process","priority":"high","order":16,"comments":[],"funnelStage":"conversion","color":"#b6cbec","platforms":[],"personas":[]},{"id":"sub_am_1","title":"Analyse personas","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","publishDate":"2026-06-15","status":"done","priority":"high","order":17,"comments":[],"platforms":[],"personas":[]},{"id":"sub_am_2","title":"Send out a newsletter 20% off move","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_acc_move","publishDate":"2026-06-11","status":"done","priority":"high","order":18,"comments":[],"platforms":[],"personas":[]},{"id":"sub_am_3","title":"Content plan for MOVE","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","publishDate":"2026-06-10","status":"done","priority":"high","order":19,"comments":[],"platforms":[],"personas":[]},{"id":"sub_am_7","title":"Film trust pilot reviews","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_acc_move","startDate":"2026-06-09","publishDate":"2026-06-09","status":"done","priority":"high","order":23,"comments":[],"platforms":[],"personas":[],"assignee":"camilla"},{"id":"sub_am_8","title":"Find UGC creators for each persona","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","status":"in_process","priority":"high","order":24,"comments":[],"platforms":[],"personas":[]},{"id":"sub_am_9","title":"Trust pilot review on MOVE (stories + carousel)","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_acc_move","publishDate":"2026-06-25","status":"idea","priority":"high","order":25,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_am_10","title":"Meeting with ContentWeb and MAKE influence","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","publishDate":"2026-06-09","status":"done","priority":"high","order":22,"comments":[],"platforms":[],"personas":[]},{"id":"sub_am_11","title":"Faceless trend videos: Strava scores/Dropped my airpods","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_acc_move","status":"idea","priority":"high","order":27,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_am_12","title":"Make a content brief for UGC","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","status":"done","priority":"high","order":23,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_am_14","title":"Add men section on the website for shoes","contentType":"idea","contentTypes":["idea"],"parentId":"camp_acc_move","status":"done","priority":"medium","order":26,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"camp_op_territories","title":"🌍 Operation new territories (DE, SE, NL)","contentType":"campaign","contentTypes":["campaign"],"startDate":"2026-07-14","publishDate":"2026-07-30","status":"planned","priority":"high","order":31,"comments":[],"funnelStage":"awareness","color":"#10b981","platforms":[],"personas":[]},{"id":"sub_ot_1","title":"Set up new markets on Shopify","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":32,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"sub_ot_2","title":"Competitor analysis","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":33,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"sub_ot_3","title":"Website translation","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":34,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"sub_ot_4","title":"Keywords research","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":35,"comments":[],"platforms":[],"personas":[],"assignee":"o2da9zub"},{"id":"sub_ot_5","title":"Google ads","contentType":"ad","contentTypes":["ad"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":36,"comments":[],"platforms":[],"personas":[],"assignee":"o2da9zub"},{"id":"sub_ot_6","title":"Meta ads","contentType":"ad","contentTypes":["ad"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":37,"comments":[],"platforms":[],"personas":[],"assignee":"whrwm8dc"},{"id":"sub_ot_7","title":"Find UGC creators","contentType":"ugc","contentTypes":["ugc"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":38,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_ot_8","title":"Content plan","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":39,"comments":[],"platforms":[],"personas":[],"assignee":"aleksandra"},{"id":"sub_ot_9","title":"Campaign plan","contentType":"idea","contentTypes":["idea"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":40,"comments":[],"platforms":[],"personas":[],"assignee":"mads"},{"id":"sub_ot_10","title":"Newsletter groups on Klaviyo","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_op_territories","status":"idea","priority":"high","order":41,"comments":[],"platforms":[],"personas":[]},{"id":"camp_move_colors","title":"🎨 MOVE New colors drop","contentType":"campaign","contentTypes":["campaign"],"product":"cloudmove","startDate":"2026-07-31","publishDate":"2026-09-16","status":"planned","priority":"high","order":42,"comments":[],"funnelStage":"conversion","color":"#3b82f6","platforms":[],"personas":[]},{"id":"sub_mc_1","title":"Product photoshoot","contentType":"idea","contentTypes":["idea"],"parentId":"camp_move_colors","status":"to_do","priority":"high","order":43,"comments":[],"platforms":[],"personas":[],"assignee":"camilla"},{"id":"sub_mc_2","title":"New colors teaser","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_move_colors","status":"idea","priority":"high","order":44,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_3","title":"Founder Q&A","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_move_colors","status":"idea","priority":"high","order":45,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_4","title":"Two new Move colours are arriving soon. Which one are you?","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_move_colors","publishDate":"2026-08-17","status":"idea","priority":"high","order":46,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_5","title":"Move at Smukfest","contentType":"idea","contentTypes":["idea"],"parentId":"camp_move_colors","startDate":"2026-08-02","publishDate":"2026-08-09","status":"idea","priority":"high","order":47,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_6","title":"Find UGC creators","contentType":"ugc","contentTypes":["ugc"],"parentId":"camp_move_colors","status":"idea","priority":"high","order":48,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_7","title":"Plan UGC content for the drop","contentType":"ugc","contentTypes":["ugc"],"parentId":"camp_move_colors","status":"idea","priority":"high","order":49,"comments":[],"platforms":[],"personas":[]},{"id":"sub_mc_8","title":"VoxPop","contentType":"video","contentTypes":["video"],"parentId":"camp_move_colors","publishDate":"2026-08-19","status":"idea","priority":"high","order":50,"comments":[],"platforms":[],"personas":[]},{"id":"camp_snowrider_teaser","title":"❄️ Snow Rider + Terra Snow Teaser","contentType":"campaign","contentTypes":["campaign"],"product":"snowrider","startDate":"2026-08-18","publishDate":"2026-09-16","status":"planned","priority":"high","order":61,"comments":[],"funnelStage":"awareness","color":"#06b6d4","platforms":[],"personas":[]},{"id":"sub_sr_1","title":"Winter is coming teaser","contentType":"video","contentTypes":["video"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":62,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_2","title":"Facebook Live","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":63,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_3","title":"Snow Rider: The winter shoe we built for everything November throws at you","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_snowrider_teaser","publishDate":"2026-11-03","status":"idea","priority":"high","order":64,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_4","title":"Snow rider or terra snow, which one to choose","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":65,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_5","title":"Founder Q&A talking about the new styles","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":66,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_6","title":"The perfect winter shoe does not exist...","contentType":"organic_post","contentTypes":["organic_post"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":67,"comments":[],"platforms":[],"personas":[]},{"id":"sub_sr_7","title":"Early Bird","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_snowrider_teaser","status":"idea","priority":"high","order":68,"comments":[],"platforms":[],"personas":[]},{"id":"camp_freeflow_w42","title":"🚀 FREE FLOW LAUNCH - WEEK 42","contentType":"campaign","contentTypes":["campaign"],"product":"freeflow","startDate":"2026-10-12","publishDate":"2026-11-12","status":"planned","priority":"high","order":69,"comments":[],"funnelStage":"conversion","color":"#6366f1","platforms":[],"personas":[]},{"id":"sub_ff_1","title":"The story behind our biggest product launch of the year","contentType":"founder_video","contentTypes":["founder_video"],"parentId":"camp_freeflow_w42","publishDate":"2026-10-05","status":"idea","priority":"high","order":70,"comments":[],"platforms":[],"personas":[]},{"id":"sub_ff_2","title":"Something new is coming in Week 42. Block your calendar.","contentType":"video","contentTypes":["video"],"parentId":"camp_freeflow_w42","publishDate":"2026-10-05","status":"idea","priority":"high","order":71,"comments":[],"platforms":[],"personas":[]},{"id":"sub_ff_3","title":"New Free Flow is live. Early access 20% off today only.","contentType":"video","contentTypes":["video"],"parentId":"camp_freeflow_w42","publishDate":"2026-10-12","status":"idea","priority":"urgent","order":72,"comments":[],"platforms":[],"personas":[]},{"id":"sub_ff_4","title":"Launch Countdown","contentType":"newsletter","contentTypes":["newsletter"],"parentId":"camp_freeflow_w42","publishDate":"2026-10-12","status":"idea","priority":"high","order":73,"comments":[],"platforms":[],"personas":[]},{"id":"yjwpnx64","title":"DMs from you","status":"idea","order":74,"comments":[],"parentId":"camp_acc_move","assignee":"aleksandra","publishDate":"2026-06-30"},{"id":"quueqr7e","title":"Michelle video nr.2","status":"idea","order":75,"comments":[],"parentId":"camp_acc_move","publishDate":"2026-06-24","assignee":"mads"}];
@@ -1359,6 +1420,11 @@ function saveData() {
   localStorage.setItem(DATA_KEY, JSON.stringify(CONTENT));
   localStorage.setItem(VIEWS_KEY, JSON.stringify(savedViews));
   localStorage.setItem(INF_KEY, JSON.stringify(INFLUENCERS));
+  // Supabase sync (fire-and-forget)
+  sbSet('content', CONTENT);
+  sbSet('config', CONFIG);
+  sbSet('influencers', INFLUENCERS);
+  sbSet('saved_views', savedViews);
 }
 
 // ---- UTILS ----
@@ -5019,11 +5085,36 @@ async function insRenderIg(){
 }
 
 // ====================================================================
-//  INIT
+//  INIT  (async — waits for Supabase sync before rendering)
 // ====================================================================
-loadData();
-bindModalAutoSave();
-renderListView();
+(async function boot() {
+  try { await sbSync(); } catch(e) { console.warn('Supabase offline, using local data:', e); }
+  loadData();
+  bindModalAutoSave();
+  renderListView();
+  // Auth init (moved here so it runs AFTER data is loaded from Supabase)
+  (function runInitAuth(){
+    (function ensureOwnerAdmin(){
+      var users = JSON.parse(localStorage.getItem('aankl_auth_users') || '[]');
+      var owner = users.find(function(u){ return u.email === 'alekslozinska@aankl.com'; });
+      if (owner && !owner.isAdmin) { owner.isAdmin = true; localStorage.setItem('aankl_auth_users', JSON.stringify(users)); sbSet('auth_users', users); }
+    })();
+    var savedId = localStorage.getItem('aankl_current_user');
+    var logoWrap = document.getElementById('login-logo-wrap');
+    var logoImg  = document.querySelector('.topbar-brand img');
+    if(logoImg && logoWrap) logoWrap.innerHTML = '<img src="' + logoImg.src + '" style="height:32px;margin-bottom:4px">';
+    if(savedId && getCfg('assignees', savedId)){
+      currentUserId = savedId;
+      document.getElementById('login-overlay').classList.add('hidden');
+      updateTopbarUser(); renderBellBadge(); checkDueDateNotifications();
+    } else {
+      currentUserId = null;
+      document.getElementById('login-overlay').classList.remove('hidden');
+    }
+  })();
+  var sl = document.getElementById('sb-loading');
+  if (sl) sl.style.display = 'none';
+})();
 
 // ════════════════════════════════════════════════════════════
 //  AUTH — Email / Password
@@ -5033,7 +5124,7 @@ const AUTH_USERS_KEY   = 'aankl_auth_users';
 let currentUserId = null;
 
 function getAuthUsers() { try{return JSON.parse(localStorage.getItem(AUTH_USERS_KEY)||'[]');}catch(e){return[];} }
-function saveAuthUsers(u){ localStorage.setItem(AUTH_USERS_KEY,JSON.stringify(u)); }
+function saveAuthUsers(u){ localStorage.setItem(AUTH_USERS_KEY,JSON.stringify(u)); sbSet('auth_users', u); }
 
 async function hashPassword(pwd){
   const str = pwd + 'aankl_2026';
@@ -5151,7 +5242,7 @@ function finishLogin(userId){
 // ─── Notifications store ──────────────────────────────────
 const NOTIF_KEY = 'aankl_notifications';
 function getNotifs(){ try{return JSON.parse(localStorage.getItem(NOTIF_KEY)||'[]');}catch(e){return[];} }
-function saveNotifs(n){ localStorage.setItem(NOTIF_KEY,JSON.stringify(n.slice(0,60))); }
+function saveNotifs(n){ localStorage.setItem(NOTIF_KEY,JSON.stringify(n.slice(0,60))); sbSet('notifications', n.slice(0,60)); }
 
 function addInAppNotif(userId,type,text,itemId){
   const n=getNotifs(); n.unshift({id:uid(),userId,type,text,itemId,ts:Date.now(),read:false}); saveNotifs(n);
@@ -5484,7 +5575,7 @@ function renderTeamSettings() {
 // ─── Invite token helpers ──────────────────────────────────
 const INVITES_KEY = 'aankl_invites_v1';
 function getInvites() { try { return JSON.parse(localStorage.getItem(INVITES_KEY)||'[]'); } catch(e) { return []; } }
-function saveInvites(arr) { localStorage.setItem(INVITES_KEY, JSON.stringify(arr)); }
+function saveInvites(arr) { localStorage.setItem(INVITES_KEY, JSON.stringify(arr)); sbSet('invites', arr); }
 
 document.getElementById('inv-generate-btn')?.addEventListener('click', () => {
   const name  = document.getElementById('inv-name').value.trim();
@@ -5555,7 +5646,7 @@ function getInspoData() {
   try { var raw=localStorage.getItem(INSPO_KEY); if(raw){var p=JSON.parse(raw);if(p&&p.boards)return p;} } catch(e) {}
   return { boards: INSPO_DEFAULT_BOARDS.map(function(b){return {id:b.id,label:b.label};}), cards: [] };
 }
-function saveInspoData(d) { try { localStorage.setItem(INSPO_KEY, JSON.stringify(d)); } catch(e){} }
+function saveInspoData(d) { try { localStorage.setItem(INSPO_KEY, JSON.stringify(d)); } catch(e){} sbSet('inspo', sbStripDataUrls(d)); }
 
 let activeInspoBoard = null;
 
@@ -5817,26 +5908,6 @@ function renderInspo() {
 }
 
 
-// ─── Boot ─────────────────────────────────────────────────
-(function initAuth(){
-  // Ensure alekslozinska@aankl.com is always admin
-  (function ensureOwnerAdmin(){
-    const users = getAuthUsers();
-    const owner = users.find(u => u.email === 'alekslozinska@aankl.com');
-    if (owner && !owner.isAdmin) { owner.isAdmin = true; saveAuthUsers(users); }
-  })();
-  const savedId = localStorage.getItem(CURRENT_USER_KEY);
-  const logoWrap = document.getElementById('login-logo-wrap');
-  const logoImg  = document.querySelector('.topbar-brand img');
-  if(logoImg&&logoWrap) logoWrap.innerHTML=`<img src="${logoImg.src}" style="height:32px;margin-bottom:4px">`;
-  if(savedId && getCfg('assignees',savedId)){
-    currentUserId = savedId;
-    document.getElementById('login-overlay').classList.add('hidden');
-    updateTopbarUser(); renderBellBadge(); checkDueDateNotifications();
-  } else {
-    currentUserId = null;
-    document.getElementById('login-overlay').classList.remove('hidden');
-  }
-})();
+// ─── Boot handled in async boot() above ─────────────────
 
 </script>
