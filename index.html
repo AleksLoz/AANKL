@@ -1331,6 +1331,17 @@ function sbStripDataUrls(inspoData) {
   });
 }
 
+async function sbGetUpdatedAt(key) {
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/aankl_store?key=eq.' + encodeURIComponent(key) + '&select=updated_at', { headers: SB_HDRS });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return d.length ? d[0].updated_at : null;
+  } catch(e) { return null; }
+}
+
+let _lastContentTs = null;
+
 async function sbSync() {
   const map = [
     ['content',     'aankl_studio_content_v3'],
@@ -1341,10 +1352,12 @@ async function sbSync() {
     ['invites',     'aankl_invites_v1'],
     ['saved_views', 'aankl_studio_saved_views'],
   ];
+  let gotSbData = false;
   await Promise.all(map.map(async function(pair) {
     var sbKey = pair[0], lsKey = pair[1];
     var val = await sbGet(sbKey);
     if (val === null) return;
+    gotSbData = true;
     if (sbKey === 'inspo') {
       try {
         var local = JSON.parse(localStorage.getItem(lsKey) || 'null');
@@ -1357,6 +1370,8 @@ async function sbSync() {
     }
     localStorage.setItem(lsKey, JSON.stringify(val));
   }));
+  // Track whether Supabase had real data (prevents seed reset for new users)
+  if (gotSbData) localStorage.setItem('aankl_sb_has_data', 'true');
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1396,10 +1411,12 @@ function loadData() {
   syncAssigneeBoards();
   try { CONTENT = JSON.parse(localStorage.getItem(DATA_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA)); }
   catch(e) { CONTENT = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
-  // Force-load marketing calendar v3 (version-key migration — runs once per browser)
+  // Only seed DEFAULT_DATA if Supabase has never had data (first-ever setup).
+  // Once real data exists in Supabase, never reset — prevents wiping coworkers' data.
   const SEED_KEY = 'aankl_studio_seed';
   const SEED_VER = 'v6_real_data_2026';
-  if (localStorage.getItem(SEED_KEY) !== SEED_VER) {
+  const sbHasData = localStorage.getItem('aankl_sb_has_data') === 'true';
+  if (!sbHasData && localStorage.getItem(SEED_KEY) !== SEED_VER) {
     CONTENT = JSON.parse(JSON.stringify(DEFAULT_DATA));
     localStorage.setItem(DATA_KEY, JSON.stringify(CONTENT));
     localStorage.setItem(SEED_KEY, SEED_VER);
@@ -1421,10 +1438,16 @@ function saveData() {
   localStorage.setItem(VIEWS_KEY, JSON.stringify(savedViews));
   localStorage.setItem(INF_KEY, JSON.stringify(INFLUENCERS));
   // Supabase sync (fire-and-forget)
+  const saveTs = new Date().toISOString();
   sbSet('content', CONTENT);
   sbSet('config', CONFIG);
   sbSet('influencers', INFLUENCERS);
   sbSet('saved_views', savedViews);
+  // Update polling timestamp so we don't re-download our own save
+  setTimeout(async () => {
+    const ts = await sbGetUpdatedAt('content');
+    if (ts) _lastContentTs = ts;
+  }, 2000);
 }
 
 // ---- UTILS ----
@@ -5114,6 +5137,23 @@ async function insRenderIg(){
   })();
   var sl = document.getElementById('sb-loading');
   if (sl) sl.style.display = 'none';
+
+  // Set initial timestamp for polling
+  _lastContentTs = await sbGetUpdatedAt('content');
+
+  // Poll for remote changes every 20 seconds (live sync for teammates)
+  setInterval(async function() {
+    if (document.hidden) return;
+    const ts = await sbGetUpdatedAt('content');
+    if (!ts || !_lastContentTs) { _lastContentTs = ts; return; }
+    if (ts !== _lastContentTs) {
+      _lastContentTs = ts;
+      await sbSync();
+      loadData();
+      renderListView();
+      toast('↻ Updated by teammate', 'success');
+    }
+  }, 20000);
 })();
 
 // ════════════════════════════════════════════════════════════
