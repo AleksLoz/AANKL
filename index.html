@@ -4437,12 +4437,12 @@ document.getElementById('create-camp-save').addEventListener('click', () => {
     startDate: startDate || undefined,
     publishDate: publishDate || undefined,
     color: _ccColor,
-    order: Date.now(),
+    order: Math.min(0, ...CONTENT.map(c => c.order || 0)) - 1,
     comments: [],
     platforms: [],
     personas: [],
   };
-  CONTENT.push(newCamp);
+  CONTENT.unshift(newCamp);
   saveData();
   renderListView();
   renderCampaigns();
