@@ -738,6 +738,7 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
 .kanban-col-remove:hover{background:#fee2e2;color:#ef4444}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1550,7 +1551,8 @@ function saveData() {
     sbSet('config', CONFIG);
     sbSet('influencers', INFLUENCERS);
     sbSet('saved_views', savedViews);
-    // Update polling timestamp so we don't re-download our own save
+    // Notify all other browsers instantly via Realtime broadcast
+    if (window._sbBroadcast) window._sbBroadcast();
     const ts = await sbGetUpdatedAt('content');
     if (ts) _lastContentTs = ts;
   })();
@@ -5419,28 +5421,52 @@ function migrateSnowriderTasks() {
   var sl = document.getElementById('sb-loading');
   if (sl) sl.style.display = 'none';
 
-  // Set initial timestamp for polling
-  _lastContentTs = await sbGetUpdatedAt('content');
+  // Real-time collaboration via Supabase Broadcast
+  // When anyone saves, all other browsers are notified instantly
+  try {
+    const _sbClient = window.supabase.createClient(SB_URL, SB_KEY);
+    const _syncChannel = _sbClient.channel('aankl_content_sync');
+    let _isSyncing = false;
 
-  // Poll for remote changes every 20 seconds (live sync for teammates)
-  setInterval(async function() {
-    if (document.hidden) return;
-    const ts = await sbGetUpdatedAt('content');
-    if (!ts || !_lastContentTs) { _lastContentTs = ts; return; }
-    if (ts !== _lastContentTs) {
-      _lastContentTs = ts;
-      const remote = await sbGet('content');
-      if (remote) {
-        const merged = mergeContent(CONTENT, remote);
-        CONTENT = merged;
-        localStorage.setItem(DATA_KEY, JSON.stringify(merged));
+    _syncChannel
+      .on('broadcast', { event: 'content_updated' }, async () => {
+        if (_isSyncing) return;
+        _isSyncing = true;
+        try {
+          const remote = await sbGet('content');
+          if (remote) {
+            const merged = mergeContent(CONTENT, remote);
+            CONTENT = merged;
+            localStorage.setItem(DATA_KEY, JSON.stringify(merged));
+            renderListView();
+            toast('↻ Updated by teammate', 'success');
+          }
+        } finally { _isSyncing = false; }
+      })
+      .subscribe();
+
+    // Expose broadcast function so saveData can trigger it
+    window._sbBroadcast = () => _syncChannel.send({ type: 'broadcast', event: 'content_updated', payload: {} });
+  } catch(e) {
+    console.warn('Realtime unavailable, falling back to polling:', e);
+    // Fallback: poll every 10 seconds
+    setInterval(async function() {
+      if (document.hidden) return;
+      const ts = await sbGetUpdatedAt('content');
+      if (!_lastContentTs) { _lastContentTs = ts; return; }
+      if (ts && ts !== _lastContentTs) {
+        _lastContentTs = ts;
+        const remote = await sbGet('content');
+        if (remote) {
+          const merged = mergeContent(CONTENT, remote);
+          CONTENT = merged;
+          localStorage.setItem(DATA_KEY, JSON.stringify(merged));
+          renderListView();
+          toast('↻ Updated by teammate', 'success');
+        }
       }
-      await sbSync();
-      loadData();
-      renderListView();
-      toast('↻ Updated by teammate', 'success');
-    }
-  }, 20000);
+    }, 10000);
+  }
 })();
 
 // ════════════════════════════════════════════════════════════
