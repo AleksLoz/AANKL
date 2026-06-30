@@ -753,7 +753,7 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
     <button class="view-pill" data-view="campaigns">Campaigns</button>
     <button class="view-pill" data-view="influencers">Influencers</button>
     <button class="view-pill" data-view="inspo">✨ Inspo</button>
-    <button class="view-pill" data-view="insights">📊 Insights</button>
+    <button class="view-pill" data-view="insights">Insights</button>
     <!-- Insights tab hidden -->
   </div>
   <div class="topbar-right">
@@ -4948,102 +4948,22 @@ function renderInsights(){
 
   view.innerHTML = `
   <div class="insights-wrap">
-    <!-- Header row -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
       <div>
         <h2 style="font-size:20px;font-weight:700;margin:0 0 3px">Insights</h2>
-        <p style="font-size:12px;color:var(--text3);margin:0">Competitor ads · @aanklfootwear performance · Footwear trends</p>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <span id="ins-ts" style="font-size:11px;color:var(--text3)"></span>
-        <button class="ins-refresh-btn" onclick="insRefresh()">↻ Refresh</button>
-        <button class="ins-refresh-btn" id="ins-settings-btn" onclick="insToggleSettings()">⚙ Connect APIs</button>
+        <p style="font-size:12px;color:var(--text3);margin:0">Weather forecast · Search trends</p>
       </div>
     </div>
 
-    <!-- API Settings panel -->
-    <div id="ins-settings-panel" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:20px">
-      <p style="font-size:12px;font-weight:700;margin:0 0 14px;color:var(--text)">Connect APIs for live data</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-        <div>
-          <p style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin:0 0 4px">Meta Ad Library Token</p>
-          <p style="font-size:11px;color:var(--text2);margin:0 0 7px">Free — get from <a href="https://developers.facebook.com/tools/explorer/" target="_blank" style="color:var(--accent)">Graph API Explorer</a> with <code style="background:var(--bg);padding:1px 4px;border-radius:3px">ads_read</code> permission</p>
-          <div class="ins-token-row">
-            <input class="ins-token-input" id="ins-meta-inp" placeholder="EAA…" value="${insMetaToken}">
-            <button class="btn btn-primary" onclick="insSaveMetaToken()" style="font-size:12px;padding:5px 12px;white-space:nowrap">Save</button>
-          </div>
-        </div>
-        <div>
-          <p style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin:0 0 4px">Instagram Graph API Token</p>
-          <p style="font-size:11px;color:var(--text2);margin:0 0 7px">From <a href="https://developers.facebook.com/docs/instagram-basic-display-api" target="_blank" style="color:var(--accent)">Meta for Developers</a> — requires Business/Creator account</p>
-          <div class="ins-token-row">
-            <input class="ins-token-input" id="ins-ig-inp" placeholder="IGQ…" value="${insIgToken}">
-            <button class="btn btn-primary" onclick="insSaveIgToken()" style="font-size:12px;padding:5px 12px;white-space:nowrap">Save</button>
-          </div>
-        </div>
+    <!-- ── WEATHER FORECAST ──────────────────────────────── -->
+    <div class="insights-section">
+      <div class="insights-section-title" style="margin-bottom:16px">
+        🌤 14-Day Weather Forecast
+        <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">Live · Open-Meteo</span>
       </div>
-    </div>
-
-    <!-- Two-column layout -->
-    <div class="insights-grid">
-
-      <!-- LEFT: Competitor ads + trends + what's working -->
-      <div>
-
-        <!-- Meta Ad Library -->
-        <div class="insights-section">
-          <div class="insights-section-title">
-            📢 Competitor Ads — Meta Ad Library
-            <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">${insMetaToken?'🟢 Live data':'🟡 Demo preview'}</span>
-          </div>
-          <div class="comp-tab-bar" id="ins-comp-tabs">
-            ${COMPETITORS.map(c=>`<button class="comp-tab${c.id===insActiveComp?' active':''}" onclick="insSetComp('${c.id}')">${c.label}</button>`).join('')}
-          </div>
-          <div id="ins-ads-wrap"><div class="ins-loading"><span class="ins-spinner"></span>Loading ads…</div></div>
-        </div>
-
-        <!-- Footwear Trends -->
-        <div class="insights-section">
-          <div class="insights-section-title">📈 Trending in Footwear — 2026</div>
-          <div class="trend-grid">
-            ${FOOTWEAR_TRENDS.map(t=>`
-            <div class="trend-card">
-              <div class="trend-card-label">${t.emoji} ${t.tag}</div>
-              <div class="trend-card-title">${t.title}</div>
-              <div class="trend-card-desc">${t.desc}</div>
-              <span class="trend-badge" style="background:${t.bc};color:${t.bt}">${t.badge}</span>
-            </div>`).join('')}
-          </div>
-        </div>
-
-        <!-- What's working -->
-        <div class="insights-section">
-          <div class="insights-section-title">🎯 For AANKL — What's Working vs. What to Stop</div>
-          <div class="works-grid">
-            <div class="works-card green">
-              <div class="works-card-title">✅ Keep Doing</div>
-              ${WORKS_YES.map(w=>`<div class="works-item">${w}</div>`).join('')}
-            </div>
-            <div class="works-card red">
-              <div class="works-card-title">❌ Stop / Avoid</div>
-              ${WORKS_NO.map(w=>`<div class="works-item">${w}</div>`).join('')}
-            </div>
-          </div>
-        </div>
-
+      <div id="weather-wrap" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+        <div style="color:var(--text3);font-size:13px;padding:20px">Loading weather…</div>
       </div>
-
-      <!-- RIGHT: AANKL Instagram -->
-      <div>
-        <div class="insights-section" style="position:sticky;top:80px">
-          <div class="insights-section-title">
-            📸 @aanklfootwear
-            <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">${insIgToken?'🟢 Live':'🟡 Demo'}</span>
-          </div>
-          <div id="ins-ig-wrap"><div class="ins-loading"><span class="ins-spinner"></span>Loading stats…</div></div>
-        </div>
-      </div>
-
     </div>
 
     <!-- ── SEARCH TRENDS ─────────────────────────────────── -->
@@ -5059,35 +4979,10 @@ function renderInsights(){
       <p style="font-size:11px;color:var(--text3);margin-top:8px">Comparing: sneakers · running shoes · kids shoes · waterproof shoes · ankle boots</p>
     </div>
 
-    <!-- ── WEATHER FORECAST ──────────────────────────────── -->
-    <div class="insights-section" style="margin-top:24px">
-      <div class="insights-section-title" style="margin-bottom:16px">
-        🌤 14-Day Weather Forecast
-        <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">Live · Open-Meteo</span>
-      </div>
-      <div id="weather-wrap" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
-        <div style="color:var(--text3);font-size:13px;padding:20px">Loading weather…</div>
-      </div>
-    </div>
+  </div>`;
 
-  </div><!-- close insights-wrap -->
-  `;
-
-  // Set timestamp
-  const ts = document.getElementById('ins-ts');
-  if(ts) ts.textContent = 'Updated ' + new Date().toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
-
-  // Restore settings panel state
-  if(insSettingsOpen){
-    const p = document.getElementById('ins-settings-panel');
-    if(p) p.style.display='';
-  }
-
-  // Render async sections
-  insRenderAds(insActiveComp);
-  insRenderIg();
-  renderTrendsWidget();
   renderWeather();
+  renderTrendsWidget();
 }
 
 function insToggleSettings(){
