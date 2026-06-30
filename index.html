@@ -5323,11 +5323,62 @@ async function insRenderIg(){
 }
 
 // ====================================================================
+//  MIGRATIONS
+// ====================================================================
+function migrateSnowriderTasks() {
+  const MIGRATION_KEY = 'aankl_migration_snowrider_v1';
+  if (localStorage.getItem(MIGRATION_KEY)) return;
+  const parentId = 'camp_snowrider_teaser';
+  const tasks = [
+    {date:'2026-06-30', title:'Landing page + blog live',                                                      type:'idea',          platforms:[]},
+    {date:'2026-07-20', title:'"They\'re back." Behind the scenes of SnowRider & TerraStorm arriving',        type:'video',         platforms:['instagram','tiktok']},
+    {date:'2026-07-24', title:'Why our winter boots sell out every year',                                      type:'founder_video', platforms:['instagram','tiktok']},
+    {date:'2026-07-29', title:'SnowRider vs TerraStorm – Which one fits your child?',                         type:'founder_video', platforms:['instagram','tiktok']},
+    {date:'2026-08-02', title:'The biggest mistake parents make when buying winter boots',                     type:'carousel',      platforms:['instagram']},
+    {date:'2026-08-06', title:'Waterproof test (real puddles & rain)',                                         type:'video',         platforms:['instagram','tiktok']},
+    {date:'2026-08-10', title:'Why many parents skip rubber boots after switching to AANKL',                   type:'ugc',           platforms:['tiktok','instagram']},
+    {date:'2026-08-14', title:'Kids test: climbing, running, jumping & puddles',                               type:'ugc',           platforms:['tiktok','instagram']},
+    {date:'2026-08-18', title:'🚀 Launch Day',                                                                 type:'video',         platforms:['instagram','tiktok','newsletter']},
+    {date:'2026-08-20', title:'Customer reactions from last season',                                           type:'carousel',      platforms:['instagram']},
+    {date:'2026-08-23', title:'Behind the technology (Waterproof, Mesh Lining, Bureau Veritas)',               type:'carousel',      platforms:['instagram']},
+    {date:'2026-08-27', title:'How to choose the right size',                                                  type:'video',         platforms:['instagram','tiktok']},
+    {date:'2026-08-31', title:'Early Bird ends soon',                                                          type:'story',         platforms:['instagram','newsletter']},
+    {date:'2026-09-05', title:'What parents say after one full winter',                                        type:'ugc',           platforms:['instagram','tiktok']},
+    {date:'2026-09-10', title:'Why they sell out every year',                                                  type:'founder_video', platforms:['instagram','tiktok']},
+    {date:'2026-09-15', title:'Last chance before the first cold weeks',                                       type:'video',         platforms:['instagram','tiktok','newsletter']},
+  ];
+  let changed = false;
+  tasks.forEach((t, i) => {
+    const exists = CONTENT.some(c => c.parentId === parentId && c.title === t.title);
+    if (!exists) {
+      CONTENT.push({
+        id: 'sr_mig_' + i,
+        title: t.title,
+        contentType: t.type,
+        contentTypes: [t.type],
+        parentId,
+        publishDate: t.date,
+        status: 'idea',
+        priority: 'high',
+        platforms: t.platforms,
+        personas: [],
+        comments: [],
+        order: 1000 + i,
+      });
+      changed = true;
+    }
+  });
+  if (changed) saveData();
+  localStorage.setItem(MIGRATION_KEY, '1');
+}
+
+// ====================================================================
 //  INIT  (async — waits for Supabase sync before rendering)
 // ====================================================================
 (async function boot() {
   try { await sbSync(); } catch(e) { console.warn('Supabase offline, using local data:', e); }
   loadData();
+  migrateSnowriderTasks();
   bindModalAutoSave();
   renderListView();
   // Auth init (moved here so it runs AFTER data is loaded from Supabase)
