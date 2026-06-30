@@ -753,6 +753,7 @@ input[type=date]{padding:3px 6px;border:1px solid var(--border);border-radius:va
     <button class="view-pill" data-view="campaigns">Campaigns</button>
     <button class="view-pill" data-view="influencers">Influencers</button>
     <button class="view-pill" data-view="inspo">✨ Inspo</button>
+    <button class="view-pill" data-view="insights">📊 Insights</button>
     <!-- Insights tab hidden -->
   </div>
   <div class="topbar-right">
@@ -5044,7 +5045,33 @@ function renderInsights(){
       </div>
 
     </div>
-  </div>`;
+
+    <!-- ── SEARCH TRENDS ─────────────────────────────────── -->
+    <div class="insights-section" style="margin-top:24px">
+      <div class="insights-section-title" style="margin-bottom:14px">
+        🔍 Google Search Trends — Footwear Keywords
+        <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">Weekly · via Google Trends</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        ${['DK','DE','SE','NL'].map(geo=>`<button class="comp-tab trends-geo-btn${geo==='DK'?' active':''}" data-geo="${geo}" onclick="switchTrendsGeo('${geo}')">${{DK:'🇩🇰 Denmark',DE:'🇩🇪 Germany',SE:'🇸🇪 Sweden',NL:'🇳🇱 Netherlands'}[geo]}</button>`).join('')}
+      </div>
+      <div id="trends-widget-wrap" style="min-height:320px;background:var(--bg);border-radius:var(--radius-lg);padding:4px;overflow:hidden"></div>
+      <p style="font-size:11px;color:var(--text3);margin-top:8px">Comparing: sneakers · running shoes · kids shoes · waterproof shoes · ankle boots</p>
+    </div>
+
+    <!-- ── WEATHER FORECAST ──────────────────────────────── -->
+    <div class="insights-section" style="margin-top:24px">
+      <div class="insights-section-title" style="margin-bottom:16px">
+        🌤 14-Day Weather Forecast
+        <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--text3)">Live · Open-Meteo</span>
+      </div>
+      <div id="weather-wrap" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+        <div style="color:var(--text3);font-size:13px;padding:20px">Loading weather…</div>
+      </div>
+    </div>
+
+  </div><!-- close insights-wrap -->
+  `;
 
   // Set timestamp
   const ts = document.getElementById('ins-ts');
@@ -5059,6 +5086,8 @@ function renderInsights(){
   // Render async sections
   insRenderAds(insActiveComp);
   insRenderIg();
+  renderTrendsWidget();
+  renderWeather();
 }
 
 function insToggleSettings(){
@@ -5091,6 +5120,122 @@ function insRefresh(){
   insAdsCache = {};
   renderInsights();
   toast('↻ Refreshing insights…');
+}
+
+// ── Google Trends Widget ─────────────────────────────────────
+const TRENDS_KEYWORDS = ['sneakers','running shoes','kids shoes','waterproof shoes','ankle boots'];
+let _trendsGeo = 'DK';
+let _trendsScriptLoaded = false;
+
+function switchTrendsGeo(geo) {
+  _trendsGeo = geo;
+  document.querySelectorAll('.trends-geo-btn').forEach(b => b.classList.toggle('active', b.dataset.geo === geo));
+  renderTrendsWidget();
+}
+window.switchTrendsGeo = switchTrendsGeo;
+
+function renderTrendsWidget() {
+  const wrap = document.getElementById('trends-widget-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="padding:20px;color:var(--text3);font-size:13px">Loading trends…</div>';
+
+  const geoNames = {DK:'Denmark',DE:'Germany',SE:'Sweden',NL:'Netherlands'};
+
+  function doRender() {
+    wrap.innerHTML = '';
+    const req = {
+      comparisonItem: TRENDS_KEYWORDS.map(kw => ({ keyword: kw, geo: _trendsGeo, time: 'now 7-d' })),
+      category: 0, property: ''
+    };
+    const opts = {
+      exploreQuery: 'q=' + TRENDS_KEYWORDS.map(encodeURIComponent).join('%2C') + '&geo=' + _trendsGeo + '&date=now+7-d',
+      guestPath: 'https://trends.google.com:443/trends/embed/'
+    };
+    try {
+      window.trends.embed.renderExploreWidgetTo(wrap, 'TIMESERIES', req, opts);
+    } catch(e) {
+      wrap.innerHTML = `<div style="padding:16px;font-size:13px;color:var(--text2)">
+        <p style="margin:0 0 8px;font-weight:600">Open Google Trends for ${geoNames[_trendsGeo]}</p>
+        <p style="margin:0 0 12px;color:var(--text3);font-size:12px">Weekly search volume: ${TRENDS_KEYWORDS.join(' · ')}</p>
+        <a href="https://trends.google.com/trends/explore?q=${TRENDS_KEYWORDS.map(encodeURIComponent).join('%2C')}&geo=${_trendsGeo}&date=now+7-d" target="_blank" class="btn btn-primary" style="font-size:12px;padding:6px 14px;text-decoration:none">Open in Google Trends →</a>
+      </div>`;
+    }
+  }
+
+  if (_trendsScriptLoaded && window.trends && window.trends.embed) {
+    doRender(); return;
+  }
+  // Load embed script dynamically
+  const existing = document.getElementById('trends-embed-script');
+  if (existing) existing.remove();
+  const s = document.createElement('script');
+  s.id = 'trends-embed-script';
+  s.src = 'https://ssl.gstatic.com/trends_nrtr/embed_loader.js';
+  s.onload = () => { _trendsScriptLoaded = true; setTimeout(doRender, 300); };
+  s.onerror = () => doRender(); // fallback link
+  document.head.appendChild(s);
+}
+
+// ── Weather Forecast (Open-Meteo, free, no key) ──────────────
+const WEATHER_CITIES = [
+  { name: 'Copenhagen', flag: '🇩🇰', country: 'Denmark',     lat: 55.6761, lon: 12.5683, tz: 'Europe/Copenhagen' },
+  { name: 'Berlin',     flag: '🇩🇪', country: 'Germany',     lat: 52.5200, lon: 13.4050, tz: 'Europe/Berlin'     },
+  { name: 'Stockholm',  flag: '🇸🇪', country: 'Sweden',      lat: 59.3293, lon: 18.0686, tz: 'Europe/Stockholm'  },
+  { name: 'Amsterdam',  flag: '🇳🇱', country: 'Netherlands', lat: 52.3676, lon:  4.9041, tz: 'Europe/Amsterdam'  },
+];
+
+function wmoIcon(code) {
+  if (code === 0)              return '☀️';
+  if (code <= 2)               return '🌤';
+  if (code === 3)              return '☁️';
+  if (code <= 49)              return '🌫';
+  if (code <= 59)              return '🌦';
+  if (code <= 69)              return '🌧';
+  if (code <= 79)              return '🌨';
+  if (code <= 82)              return '🌧';
+  if (code <= 86)              return '❄️';
+  if (code <= 99)              return '⛈';
+  return '🌡';
+}
+
+async function renderWeather() {
+  const wrap = document.getElementById('weather-wrap');
+  if (!wrap) return;
+
+  const results = await Promise.all(WEATHER_CITIES.map(async city => {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&timezone=${city.tz}&forecast_days=14`;
+      const r = await fetch(url);
+      const d = await r.json();
+      return { city, data: d.daily };
+    } catch(e) { return { city, error: true }; }
+  }));
+
+  wrap.innerHTML = results.map(({ city, data, error }) => {
+    if (error) return `<div class="insights-section" style="opacity:.5">${city.flag} ${city.name} — failed to load</div>`;
+    const days = data.time.map((date, i) => ({
+      date, max: Math.round(data.temperature_2m_max[i]),
+      min: Math.round(data.temperature_2m_min[i]),
+      rain: data.precipitation_sum[i],
+      icon: wmoIcon(data.weathercode[i])
+    }));
+    const dayHtml = days.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      const label = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+      const rainBar = d.rain > 0 ? `<div style="font-size:10px;color:#3b82f6;margin-top:2px">💧 ${d.rain.toFixed(1)}mm</div>` : '';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">
+        <span style="width:90px;color:var(--text2);flex-shrink:0">${label}</span>
+        <span style="font-size:16px;width:24px;text-align:center">${d.icon}</span>
+        <span style="font-weight:600;color:var(--text)">${d.max}°</span>
+        <span style="color:var(--text3)">${d.min}°</span>
+        ${rainBar}
+      </div>`;
+    }).join('');
+    return `<div class="insights-section" style="padding:14px 16px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px">${city.flag} ${city.name} <span style="font-size:11px;font-weight:400;color:var(--text3)">${city.country}</span></div>
+      ${dayHtml}
+    </div>`;
+  }).join('');
 }
 
 function insSetComp(id){
