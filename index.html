@@ -1523,22 +1523,37 @@ function loadData() {
   try { INFLUENCERS = JSON.parse(localStorage.getItem(INF_KEY)) || JSON.parse(JSON.stringify(DEFAULT_INFLUENCERS)); }
   catch(e) { INFLUENCERS = JSON.parse(JSON.stringify(DEFAULT_INFLUENCERS)); }
 }
+function mergeContent(local, remote) {
+  if (!remote || !Array.isArray(remote)) return local;
+  const map = {};
+  remote.forEach(item => { map[item.id] = item; });
+  local.forEach(item => {
+    if (!map[item.id] || (item._ts || 0) >= (map[item.id]._ts || 0)) {
+      map[item.id] = item;
+    }
+  });
+  return Object.values(map);
+}
+
 function saveData() {
   localStorage.setItem(CONFIG_KEY, JSON.stringify(CONFIG));
   localStorage.setItem(DATA_KEY, JSON.stringify(CONTENT));
   localStorage.setItem(VIEWS_KEY, JSON.stringify(savedViews));
   localStorage.setItem(INF_KEY, JSON.stringify(INFLUENCERS));
-  // Supabase sync (fire-and-forget)
-  const saveTs = new Date().toISOString();
-  sbSet('content', CONTENT);
-  sbSet('config', CONFIG);
-  sbSet('influencers', INFLUENCERS);
-  sbSet('saved_views', savedViews);
-  // Update polling timestamp so we don't re-download our own save
-  setTimeout(async () => {
+  // Merge with remote before pushing so concurrent edits aren't lost
+  (async () => {
+    const remote = await sbGet('content');
+    const merged = mergeContent(CONTENT, remote);
+    CONTENT = merged;
+    localStorage.setItem(DATA_KEY, JSON.stringify(CONTENT));
+    await sbSet('content', merged);
+    sbSet('config', CONFIG);
+    sbSet('influencers', INFLUENCERS);
+    sbSet('saved_views', savedViews);
+    // Update polling timestamp so we don't re-download our own save
     const ts = await sbGetUpdatedAt('content');
     if (ts) _lastContentTs = ts;
-  }, 2000);
+  })();
 }
 
 // ---- UTILS ----
@@ -2517,7 +2532,7 @@ function updateItem(id, fields) {
   const idx = CONTENT.findIndex(c=>c.id===id);
   if (idx<0) return;
   const before = {...CONTENT[idx]};
-  Object.assign(CONTENT[idx], fields);
+  Object.assign(CONTENT[idx], fields, { _ts: Date.now() });
   saveData();
   // Notification hooks
   const after = CONTENT[idx];
@@ -5414,6 +5429,12 @@ function migrateSnowriderTasks() {
     if (!ts || !_lastContentTs) { _lastContentTs = ts; return; }
     if (ts !== _lastContentTs) {
       _lastContentTs = ts;
+      const remote = await sbGet('content');
+      if (remote) {
+        const merged = mergeContent(CONTENT, remote);
+        CONTENT = merged;
+        localStorage.setItem(DATA_KEY, JSON.stringify(merged));
+      }
       await sbSync();
       loadData();
       renderListView();
